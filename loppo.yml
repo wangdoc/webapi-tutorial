@@ -1,0 +1,7 @@
+dir: docs
+output: dist
+site: Web API 教程
+theme: wangdoc
+customization: false
+themeDir: loppo-theme
+direction: ltr

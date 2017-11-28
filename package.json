@@ -23,6 +23,6 @@
   "license": "ISC",
   "devDependencies": {
     "loppo": "latest",
-    "loppo-theme-wangdoc": "latest"
+    "loppo-theme-wangdoc": "0.0.6"
   }
 }
