@@ -1,7 +1,5 @@
 # WebSocket
 
-## WebSocket 的由来
-
 WebSocket 是一种网络通信协议，很多高级功能都需要它。
 
 初次接触 WebSocket 的人，都会问同样的问题：我们已经有了 HTTP 协议，为什么还需要另一个协议？它能带来什么好处？
