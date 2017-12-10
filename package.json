@@ -8,6 +8,8 @@
   "scripts": {
     "prepush": "npm update",
     "build": "loppo --site \"Web API 教程\" --theme wangdoc",
+    "build-and-commit": "npm run build && npm run commit",
+    "commit": "gh-pages --dist dist --dest dist --branch master --repo git@github.com:wangdoc/website.git",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,12 +18,16 @@
   },
   "keywords": [
     "Tutorial",
-    "Web"
+    "Web",
+    "wangdoc",
+    "document"
   ],
   "author": "Ruan Yifeng",
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
+    "gh-pages": "^1.1.0",
+    "husky": "^0.14.3",
     "loppo": "latest",
     "loppo-theme-wangdoc": "latest"
   }
