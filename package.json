@@ -9,7 +9,7 @@
     "prepush": "npm update",
     "build": "loppo --site \"Web API 教程\" --theme wangdoc",
     "build-and-commit": "npm run build && npm run commit",
-    "commit": "gh-pages --dist dist --dest dist --branch master --repo git@github.com:wangdoc/website.git",
+    "commit": "gh-pages --dist dist --dest dist/webapi --branch master --repo git@github.com:wangdoc/website.git",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
