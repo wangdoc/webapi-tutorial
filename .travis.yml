@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+- '8'
+script: bash ./deploy.sh
+env:
+  global:
+  - ENCRYPTION_LABEL: 8ef0849a71cc
+  - COMMIT_AUTHOR_EMAIL: yifeng.ruan@gmail.com
