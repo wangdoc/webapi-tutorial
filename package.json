@@ -2,7 +2,6 @@
   "name": "webapi-tutorial",
   "version": "0.0.0",
   "description": "Web API 教程",
-  "main": "index.js",
   "directories": {
     "doc": "docs"
   },
@@ -21,8 +20,9 @@
   ],
   "author": "Ruan Yifeng",
   "license": "ISC",
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
     "loppo": "latest",
-    "loppo-theme-wangdoc": "0.0.6"
+    "loppo-theme-wangdoc": "latest"
   }
 }
