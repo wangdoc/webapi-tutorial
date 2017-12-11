@@ -10,6 +10,7 @@
     "build": "loppo --site \"Web API 教程\" --theme wangdoc",
     "build-and-commit": "npm run build && npm run commit",
     "commit": "gh-pages --dist dist --dest dist/webapi --branch master --repo git@github.com:wangdoc/website.git",
+    "chapter": "loppo chapter",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,6 +30,6 @@
     "gh-pages": "^1.1.0",
     "husky": "^0.14.3",
     "loppo": "latest",
-    "loppo-theme-wangdoc": "latest"
+    "loppo-theme-wangdoc": "^0.1.2"
   }
 }

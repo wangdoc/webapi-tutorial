@@ -1,3 +1,4 @@
+- canvas.md: Canvas API
 - fetch.md: Fetch API
 - intersectionObserver.md: IntersectionObserver
 - server-sent-events.md: Server-Sent Events

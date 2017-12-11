@@ -294,7 +294,7 @@ req.url // "http://example.com/index.html"
 var uploadReq = new Request('/uploadImage', {
   method: 'POST',
   headers: {
-    'Content-Type': 'mage/png',
+    'Content-Type': 'image/png',
   },
   body: 'image data'
 });
