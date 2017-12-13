@@ -164,12 +164,15 @@ ctx.fillRect(10,10,200,100);
 Canvas API 允许将图像文件插入画布，做法是读取图片后，使用`drawImage`方法在画布内进行重绘。
 
 ```javascript
+var canvas = document.querySelector('#canvas');
+var ctx = canvas.getContext('2d');
+
 var img = new Image();
 img.src = 'image.png';
-ctx.drawImage(img, 0, 0); // 设置对应的图像对象，以及它在画布上的位置
+ctx.drawImage(img, 0, 0); // 将图像放置在画布，后两个参数是图像左上角的坐标
 ```
 
-上面代码将一个 PNG 图像载入画布。`drawImage()`方法接受三个参数，第一个参数是图像文件的DOM元素（即`<img>`节点），第二个和第三个参数是图像左上角在画布中的坐标，上例中的`(0, 0)`就表示将图像左上角放置在画布的左上角。
+上面代码将一个 PNG 图像载入画布。`drawImage()`方法接受三个参数，第一个参数是图像文件的 DOM 元素（即`<img>`节点），第二个和第三个参数是图像左上角在画布中的坐标，上例中的`(0, 0)`就表示将图像左上角放置在画布的左上角。
 
 由于图像的载入需要时间，`drawImage`方法只能在图像完全载入后才能调用，因此上面的代码需要改写。
 
@@ -189,7 +192,7 @@ image.onload = function() {
 image.src = 'image.png';
 ```
 
-### getImageData方法，putImageData方法
+### getImageData()，putImageData()
 
 `getImageData`方法可以用来读取 Canvas 的内容，返回一个对象，包含了每个像素的信息。
 
@@ -197,13 +200,15 @@ image.src = 'image.png';
 var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 ```
 
-`imageData`对象有一个`data`属性，它的值是一个一维数组。该数组的值，依次是每个像素的红、绿、蓝、alpha 通道值，因此该数组的长度等于`图像的像素宽度 x 图像的像素高度 x 4`，每个值的范围是 0～255。这个数组不仅可读，而且可写，因此通过操作这个数组的值，就可以达到操作图像的目的。修改这个数组以后，使用`putImageData`方法将数组内容重新绘制在 Canvas 画布上。
+`imageData`对象有一个`data`属性，它的值是一个一维数组。该数组的值，依次是每个像素的红、绿、蓝、alpha 通道值，因此该数组的长度等于`图像的像素宽度 x 图像的像素高度 x 4`，每个值的范围是 0～255。这个数组不仅可读，而且可写，因此通过操作这个数组的值，就可以达到操作图像的目的。
+
+`putImageData`方法将一维的像素数组绘制在 Canvas 画布上。
 
 ```javascript
 context.putImageData(imageData, 0, 0);
 ```
 
-### toDataURL方法
+### toDataURL()
 
 对图像数据做出修改以后，可以使用`toDataURL`方法，将 Canvas 数据重新转化成一般的图像文件形式。
 
