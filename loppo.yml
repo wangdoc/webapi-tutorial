@@ -5,3 +5,4 @@ theme: wangdoc
 customization: false
 themeDir: loppo-theme
 direction: ltr
+hasComments: true
