@@ -29,7 +29,7 @@
   "dependencies": {
     "gh-pages": "^1.1.0",
     "husky": "^0.14.3",
-    "loppo": "latest",
-    "loppo-theme-wangdoc": "latest"
+    "loppo": "^0.6.11",
+    "loppo-theme-wangdoc": "^0.1.8"
   }
 }
