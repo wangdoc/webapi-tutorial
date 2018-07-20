@@ -24,7 +24,7 @@
     "document"
   ],
   "author": "Ruan Yifeng",
-  "license": "ISC",
+  "license": "Creative Commons Attribution-ShareAlike License",
   "devDependencies": {},
   "dependencies": {
     "gh-pages": "^1.1.0",
