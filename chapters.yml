@@ -2,4 +2,5 @@
 - fetch.md: Fetch API
 - intersectionObserver.md: IntersectionObserver
 - server-sent-events.md: Server-Sent Events
+- svg.md: SVG 图像
 - websocket.md: WebSocket
