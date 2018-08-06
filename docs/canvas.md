@@ -1,61 +1,113 @@
 # Canvas API
 
-Canvas API（画布）用于在网页实时生成图像，并且可以操作图像内容，基本上它是一个可以用 JavaScript 操作的位图（bitmap）。
-
 ## 概述
 
-使用 Canvas API 之前，首先需要新建一个`<canvas>`网页元素。
+`<canvas>`元素用于生成图像。它本身就像一个画布，JavaScript 通过操作它的 API，在上面生成图像。它的底层是一个个像素，基本上`<canvas>`是一个可以用 JavaScript 操作的位图（bitmap）。
+
+它与 SVG 图像的区别在于，`<canvas>`是脚本调用各种方法生成图像，SVG 则是一个 XML 文件，通过各种子元素生成图像。
+
+使用 Canvas API 之前，需要在网页里面新建一个`<canvas>`元素。
 
 ```html
-<canvas id="myCanvas" width="400" height="200">
+<canvas id="myCanvas" width="400" height="250">
   您的浏览器不支持 Canvas
 </canvas>
 ```
 
-上面代码中，如果浏览器不支持这个 API，则就会显示`<canvas>`标签中间的文字 —— “您的浏览器不支持 Canvas”。
+如果浏览器不支持这个 API，就会显示`<canvas>`标签中间的文字：“您的浏览器不支持 Canvas”。
 
-每个`canvas`节点都有一个对应的`context`对象（上下文对象），Canvas API 定义在这个`context`对象上面，所以需要获取这个对象，方法是使用`getContext`方法。
+每个`<canvas>`元素都有一个对应的`CanvasRenderingContext2D`对象（上下文对象）。Canvas API 就定义在这个对象上面。
 
 ```javascript
 var canvas = document.getElementById('myCanvas');
-
-if (canvas.getContext) {
-  var ctx = canvas.getContext('2d');
-}
+var ctx = canvas.getContext('2d');
 ```
 
-上面代码中，`getContext`方法指定参数`2d`，表示该`canvas`节点用于生成 2D 图案（即平面图案）。如果参数是`webgl`，就表示用于生成 3D 图像（即立体图案），这部分实际上单独叫做 WebGL API（本书不涉及）。
+上面代码中，`<canvas>`元素节点对象的`getContext()`方法，返回的就是`CanvasRenderingContext2D`对象。
+
+注意，Canvas API 需要`getContext`方法指定参数`2d`，表示该`<canvas>`节点生成 2D 的平面图像。如果参数是`webgl`，就表示用于生成 3D 的立体图案，这部分属于 WebGL API。
 
 按照用途，Canvas API 分成两大部分：绘制图形和图像处理。
 
-## 绘制图形
+## Canvas API：绘制图形
 
-Canvas 画布提供了一个用来作图的平面空间，该空间的每个点都有自己的坐标，`x`表示横坐标，`y`表示竖坐标。原点`(0, 0)`位于图像左上角，`x`轴的正向是原点向右，`y`轴的正向是原点向下。
+Canvas 画布提供了一个作图的平面空间，该空间的每个点都有自己的坐标。原点`(0, 0)`位于图像左上角，`x`轴的正向是原点向右，`y`轴的正向是原点向下。
 
-### 绘制路径
+### 路径
 
-`context.beginPath`方法表示开始绘制路径，`moveTo(x, y)`方法设置线段的起点，`lineTo(x, y)`方法设置线段的终点，`stroke`方法用来给透明的线段着色。
+以下方法和属性用来绘制路径。
 
-下面是绘制一条直线的例子。
+- CanvasRenderingContext2D.beginPath()：开始绘制路径。
+- CanvasRenderingContext2D.closePath()：结束路径，返回到当前路径的起始点，会从当前点到起始点绘制一条直线。如果图形已经封闭，或者只有一个点，那么此方法不会产生任何效果。
+- CanvasRenderingContext2D.moveTo()：设置路径的起点，即将一个新路径的起始点移动到`(x，y)`坐标。
+- CanvasRenderingContext2D.lineTo()：使用直线从当前点连接到`(x, y)`坐标。
+- CanvasRenderingContext2D.fill()：在路径内部填充颜色（默认为黑色）。
+- CanvasRenderingContext2D.stroke()：路径线条着色（默认为黑色）。
+- CanvasRenderingContext2D.fillStyle：指定路径填充的颜色和样式（默认为黑色）。
+- CanvasRenderingContext2D.strokeStyle：指定路径线条的颜色和样式（默认为黑色）。
 
 ```javascript
+var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 
-ctx.beginPath(); // 开始路径绘制
-ctx.moveTo(20, 20); // 设置路径起点，坐标为(20,20)
-ctx.lineTo(200, 20); // 绘制一条到(200,20)的直线
-ctx.lineWidth = 1.0; // 设置线宽
-ctx.lineCap = "butt"; //设置端点样式:butt(默认),round,square
-ctx.lineJoin = "miter"; //设置连接样式:miter(默认),bevel,round
-ctx.strokeStyle = '#CC0000'; // 设置线的颜色
-ctx.stroke(); // 进行线的着色，这时整条线才变得可见
+ctx.beginPath();
+ctx.moveTo(100, 100);
+ctx.lineTo(200, 200);
+ctx.lineTo(100, 200);
 ```
 
-`context.moveto`和`context.lineto`方法可以多次使用。
+上面代码只是确定了路径的形状，画布上还看不出来，因为没有颜色。所以还需要着色。
 
-`context.closePath`方法会自动绘制一条当前点到起点的直线，形成一个封闭图形，省却使用一次`lineto`方法。
+```javascript
+ctx.fill()
+// 或者
+ctx.stroke()
+```
 
-### 绘制矩形
+上面代码中，这两个方法都可以使得路径可见。`fill()`在路径内部填充颜色，使之变成一个实心的图形；`stroke()`只对路径线条着色。
+
+这两个方法默认都是使用黑色，可以使用`fillStyle`和`strokeStyle`属性指定其他颜色。
+
+```javascript
+ctx.fillStyle = 'red';
+ctx.fill();
+// 或者
+ctx.strokeStyle = 'red';
+ctx.stroke();
+```
+
+上面代码将填充和线条的颜色指定为红色。
+
+## 线型
+
+以下的方法和属性控制线条的视觉特征。
+
+- CanvasRenderingContext2D.lineWidth：指定线条的宽度，默认为1.0。
+- CanvasRenderingContext2D.lineCap：指定线条末端的样式，有三个可能的值：butt（默认值，末端为矩形）、round（末端为圆形）、square（末端为突出的矩形）。
+- CanvasRenderingContext2D.lineJoin：指定线段交点的样式，有三个可能的值：round（交点为扇形）、bevel（交点为三角形底边）、miter（默认值，交点为菱形)。
+- CanvasRenderingContext2D.miterLimit：指定交点菱形的长度，默认为10。该属性只在`lineJoin`属性的值等于`miter`时有效。
+- CanvasRenderingContext2D.getLineDash()：返回一个数组，表示虚线里面线段和间距的长度。
+- CanvasRenderingContext2D.setLineDash()：数组，用于指定虚线里面线段和间距的长度。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.beginPath();
+ctx.moveTo(100, 100);
+ctx.lineTo(200, 200);
+ctx.lineTo(100, 200);
+
+ctx.lineWidth = 3;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+ctx.setLineDash([15, 5]);
+ctx.stroke();
+```
+
+上面代码中，线条的宽度为3，线条的末端和交点都改成圆角，并且设置为虚线。
+
+### 矩形
 
 `context.fillRect(x, y, width, height)`方法用来绘制矩形，它的四个参数分别为矩形左上角顶点的`x`坐标、`y`坐标，以及矩形的宽和高。`fillStyle`属性用来设置矩形的填充色。
 
