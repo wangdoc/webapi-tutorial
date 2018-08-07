@@ -109,24 +109,121 @@ ctx.stroke();
 
 ### 矩形
 
-`context.fillRect(x, y, width, height)`方法用来绘制矩形，它的四个参数分别为矩形左上角顶点的`x`坐标、`y`坐标，以及矩形的宽和高。`fillStyle`属性用来设置矩形的填充色。
+以下方法用来绘制矩形。
+
+- CanvasRenderingContext2D.rect()：绘制矩形路径。
+- CanvasRenderingContext2D.fillRect()：填充一个矩形。
+- CanvasRenderingContext2D.strokeRect()：绘制矩形边框。
+- CanvasRenderingContext2D.clearRect()：指定矩形区域的像素都变成透明。
+
+上面四个方法的格式都一样，都接受四个参数，分别是矩形左上角的横坐标和纵坐标、矩形的宽和高。
+
+`CanvasRenderingContext2D.rect()`方法用于绘制矩形路径。
 
 ```javascript
-ctx.fillStyle = 'yellow';
-ctx.fillRect(50, 50, 200, 100);
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.rect(10, 10, 100, 100);
+ctx.fill();
 ```
 
-`strokeRect`方法与`fillRect`类似，用来绘制空心矩形。
+上面代码绘制一个正方形，左上角坐标为`(10, 10)`，宽和高都为100。
+
+`CanvasRenderingContext2D.fillRect()`用来向一个矩形区域填充颜色。
 
 ```javascript
-ctx.strokeRect(10,10,200,100);
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.fillStyle = 'green';
+ctx.fillRect(10, 10, 100, 100);
 ```
 
-`clearRect`方法用来清除某个矩形区域的内容。
+上面代码绘制一个绿色的正方形，左上角坐标为`(10, 10)`，宽和高都为100。
+
+`CanvasRenderingContext2D.strokeRect()`用来绘制一个矩形区域的边框。
 
 ```javascript
-ctx.clearRect(100,50,50,50);
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.strokeStyle = 'green';
+ctx.strokeRect(10, 10, 100, 100);
 ```
+
+上面代码绘制一个绿色的空心正方形，左上角坐标为`(10, 10)`，宽和高都为100。
+
+`CanvasRenderingContext2D.clearRect()`用于擦除指定矩形区域的像素颜色，等同于把早先的绘制效果都去除。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.fillRect(10, 10, 100, 100);
+ctx.clearRect(15, 15, 90, 90);
+```
+
+上面代码先绘制一个 100 x 100 的正方形，然后在它的内部擦除 90 x 90 的区域，等同于形成了一个5像素宽度的边框。
+
+### 弧线
+
+以下方法用于绘制弧形。
+
+- `CanvasRenderingContext2D.arc()`：通过指定圆心和半径绘制弧形。
+- `CanvasRenderingContext2D.arcTo()`：通过指定两根切线和半径绘制弧形。
+
+`CanvasRenderingContext2D.arc()`主要用来绘制圆形或扇形。
+
+```javascript
+// 格式
+ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise)
+
+// 实例
+ctx.arc(5, 5, 5, 0, 2 * Math.PI, true)
+```
+
+`arc()`方法的`x`和`y`参数是圆心坐标，`radius`是半径，`startAngle`和`endAngle`则是扇形的起始角度和终止角度（以弧度表示），`anticlockwise`表示做图时应该逆时针画（`true`）还是顺时针画（`false`），这个参数用来控制扇形的方向（比如上半圆还是下半圆）。
+
+下面是绘制实心圆形的例子。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.beginPath();
+ctx.arc(60, 60, 50, 0, Math.PI * 2, true); 
+ctx.fill();
+```
+
+上面代码绘制了一个半径50，起始角度为0，终止角度为 2 * PI 的完整的圆。
+
+绘制空心半圆的例子。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.beginPath();
+ctx.moveTo(50, 20);
+ctx.arc(100, 20, 50, 0, Math.PI, false);
+ctx.stroke();
+```
+
+`CanvasRenderingContext2D.arcTo()`方法主要用来绘制圆弧，需要给出两个点的坐标，当前点与第一个点形成一条直线，第一个点与第二个点形成另一条直线，然后画出与这两根直线相切的弧线。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.beginPath();
+ctx.moveTo(0, 0);
+ctx.arcTo(50, 50, 100, 0, 25);
+ctx.lineTo(100, 0);
+ctx.stroke();
+```
+
+上面代码中，`arcTo()`有5个参数，前两个参数是第一个点的坐标，第三个参数和第四个参数是第二个点的坐标，第五个参数是半径。然后，`(0, 0)`与`(50, 50)`形成一条直线，然后`(50, 50)`与`(100, 0)`形成第二条直线。弧线就是与这两根直线相切的部分。
 
 ### 绘制文本
 
@@ -146,35 +243,6 @@ ctx.strokeText("Hello!", 10, 100);
 ```
 
 `fillText`方法不支持文本断行，即所有文本出现在一行内。所以，如果要生成多行文本，只有调用多次`fillText`方法。
-
-### 绘制圆形和扇形
-
-`context.arc`方法用来绘制扇形。
-
-```javascript
-ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
-```
-
-`arc`方法的`x`和`y`参数是圆心坐标，`radius`是半径，`startAngle`和`endAngle`则是扇形的起始角度和终止角度（以弧度表示），`anticlockwise`表示做图时应该逆时针画（`true`）还是顺时针画（`false`）。
-
-下面是如何绘制实心的圆形。
-
-```javascript
-ctx.beginPath();
-ctx.arc(60, 60, 50, 0, Math.PI*2, true); 
-ctx.fillStyle = "#000000"; 
-ctx.fill();
-```
-
-绘制空心圆形的例子。
-
-```javascript
-ctx.beginPath(); 
-ctx.arc(60, 60, 50, 0, Math.PI*2, true); 
-ctx.lineWidth = 1.0; 
-ctx.strokeStyle = "#000"; 
-ctx.stroke();
-```
 
 ### 设置渐变色
 
