@@ -323,24 +323,84 @@ text2.width // 107.78
 
 上面代码中，`10px`大小的字符串`Hello world`，渲染后宽度为`49.46`。放大到`20px`以后，宽度为`107.78`。
 
-### 渐变色
+### 渐变色和图像填充
 
-`context.createLinearGradient`方法用来设置渐变色。
+以下方法用于设置渐变效果和图像填充效果。
 
-```javascript
-var myGradient = ctx.createLinearGradient(0, 0, 0, 160); 
-myGradient.addColorStop(0, "#BABABA"); 
-myGradient.addColorStop(1, "#636363");
-```
+- CanvasRenderingContext2D.createLinearGradient()：定义线性渐变样式。
+- CanvasRenderingContext2D.createRadialGradient()：定义辐射渐变样式。
+- CanvasRenderingContext2D.createPattern()：定义图像填充样式。
 
-`createLinearGradient`方法的参数是`(x1, y1, x2, y2)`，其中`x1`和`y1`是起点坐标，`x2`和`y2`是终点坐标。通过不同的坐标值，可以生成从上至下、从左到右的渐变等等。
-
-使用方法如下：
+`createLinearGradient()`方法按照给定直线，生成线性渐变的样式。
 
 ```javascript
-ctx.fillStyle = myGradient;
-ctx.fillRect(10,10,200,100);
+ctx.createLinearGradient(x0, y0, x1, y1)
 ```
+
+`ctx.createLinearGradient(x0, y0, x1, y1)`方法接受四个参数：`x0`和`y0`是起点的横坐标和纵坐标，`x1`和`y1`是终点的横坐标和纵坐标。通过不同的坐标值，可以生成从上至下、从左到右的渐变等等。
+
+该方法的返回值是一个`CanvasGradient`对象，该对象只有一个`addColorStop()`方向，用来指定渐变点的颜色。`addColorStop()`方法接受两个参数，第一个参数是0到1之间的一个位置量，0表示起点，1表示终点，第二个参数是一个字符串，表示 CSS 颜色。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+var gradient = ctx.createLinearGradient(0, 0, 200, 0);
+gradient.addColorStop(0, 'green');
+gradient.addColorStop(1, 'white');
+ctx.fillStyle = gradient;
+ctx.fillRect(10, 10, 200, 100);
+```
+
+上面代码中，定义了渐变样式`gradient`以后，将这个样式指定给`fillStyle`属性，然后`fillRect()`就会生成以这个样式填充的矩形区域。
+
+`createRadialGradient()`方法定义一个辐射渐变，需要指定两个圆。
+
+```javascript
+ctx.createRadialGradient(x0, y0, r0, x1, y1, r1)
+```
+
+`createRadialGradient()`方法接受六个参数，`x0`和`y0`是辐射起始的圆的圆心坐标，`r0`是起始圆的半径，`x1`和`y1`是辐射终止的圆的圆心坐标，`r1`是终止圆的半径。
+
+该方法的返回值也是一个`CanvasGradient`对象。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+var gradient = ctx.createRadialGradient(100, 100, 50, 100, 100, 100);
+gradient.addColorStop(0, 'white');
+gradient.addColorStop(1, 'green');
+ctx.fillStyle = gradient;
+ctx.fillRect(0, 0, 200, 200);
+```
+
+上面代码中，生成辐射样式以后，用这个样式填充一个矩形。
+
+`createPattern()`方法定义一个图像填充样式，在指定方向上不断重复该图像，填充指定的区域。
+
+```javascript
+ctx.createPattern(image, repetition)
+```
+
+该方法接受两个参数，第一个参数是图像数据，它可以是`<img>`元素，也可以是另一个`<canvas>`元素，或者一个表示图像的 Blob 对象。第二个参数是一个字符串，有四个可能的值，分别是`repeat`（双向重复）、`repeat-x`(水平重复)、`repeat-y`(垂直重复)、`no-repeat`(不重复)。如果第二个参数是空字符串或`null`，则等同于`null`。
+
+该方法的返回值是一个`CanvasPattern`对象。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+var img = new Image();
+img.src = 'https://example.com/pattern.png';
+img.onload = function( ) {
+  var pattern = ctx.createPattern(img, 'repeat');
+  ctx.fillStyle = pattern;
+  ctx.fillRect(0, 0, 400, 400);
+};
+```
+
+上面代码中，图像加载成功以后，使用`createPattern()`生成图像样式，然后使用这个样式填充指定区域。
 
 ### 设置阴影
 
