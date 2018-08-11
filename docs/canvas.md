@@ -402,21 +402,31 @@ img.onload = function( ) {
 
 上面代码中，图像加载成功以后，使用`createPattern()`生成图像样式，然后使用这个样式填充指定区域。
 
-### 设置阴影
+### 阴影
 
-一系列与阴影相关的方法，可以用来设置阴影。
+以下属性用于设置阴影。
+
+- CanvasRenderingContext2D.shadowBlur：阴影的模糊效果，默认为`0`。
+- CanvasRenderingContext2D.shadowColor：阴影的颜色，默认为`black`。
+- CanvasRenderingContext2D.shadowOffsetX：阴影的水平位移，默认为`0`。
+- CanvasRenderingContext2D.shadowOffsetY：阴影的垂直位移，默认为`0`。
+
+下面是一个例子。
 
 ```javascript
-ctx.shadowOffsetX = 10; // 设置水平位移
-ctx.shadowOffsetY = 10; // 设置垂直位移
-ctx.shadowBlur = 5; // 设置模糊度
-ctx.shadowColor = "rgba(0,0,0,0.5)"; // 设置阴影颜色
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
 
-ctx.fillStyle = "#CC0000";
-ctx.fillRect(10,10,200,100);
+ctx.shadowOffsetX = 10;
+ctx.shadowOffsetY = 10;
+ctx.shadowBlur = 5;
+ctx.shadowColor = 'rgba(0,0,0,0.5)';
+
+ctx.fillStyle = 'green';
+ctx.fillRect(10, 10, 100, 100);
 ```
 
-## 图像处理方法
+## Canvas API：图像处理
 
 ### drawImage()
 
