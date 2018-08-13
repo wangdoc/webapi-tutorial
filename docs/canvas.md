@@ -428,12 +428,12 @@ ctx.fillRect(10, 10, 100, 100);
 
 ## Canvas API：图像处理
 
-### drawImage()
+### CanvasRenderingContext2D.drawImage()
 
-Canvas API 允许将图像文件插入画布，做法是读取图片后，使用`drawImage`方法在画布内进行重绘。
+Canvas API 允许将图像文件插入画布，做法是读取图片后，使用`drawImage()`方法将这张图片放上画布。
 
 ```javascript
-var canvas = document.querySelector('#canvas');
+var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 
 var img = new Image();
@@ -441,25 +441,44 @@ img.src = 'image.png';
 ctx.drawImage(img, 0, 0); // 将图像放置在画布，后两个参数是图像左上角的坐标
 ```
 
-上面代码将一个 PNG 图像载入画布。`drawImage()`方法接受三个参数，第一个参数是图像文件的 DOM 元素（即`<img>`节点），第二个和第三个参数是图像左上角在画布中的坐标，上例中的`(0, 0)`就表示将图像左上角放置在画布的左上角。
+上面代码将一个 PNG 图像放入画布。`drawImage()`方法的第一个参数是图像元素（即`<img>`节点），第二个和第三个参数是画布左上角的图像坐标，上例中的`(0, 0)`就表示将图像左上角放置在画布的左上角。
 
-由于图像的载入需要时间，`drawImage`方法只能在图像完全载入后才能调用，因此上面的代码需要改写。
+`drawImage()`方法的完整格式如下。
 
 ```javascript
-var image = new Image();
-
-image.onload = function() {
-  var canvas = document.createElement('canvas');
-  canvas.width = image.width;
-  canvas.height = image.height;
-  canvas.getContext('2d').drawImage(image, 0, 0);
-  // 插入页面底部
-  document.body.appendChild(image);
-  return canvas;
-}
-
-image.src = 'image.png';
+ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
 ```
+
+各个参数的含义如下。
+
+- image：图像元素
+- sx：图像内部的横坐标，用于映射到画布的放置点上。
+- sy：图像内部的纵坐标，用于映射到画布的放置点上。
+- sWidth：图像在画布上的宽度，会产生缩放效果。如果未指定，则图像不会缩放，按照实际大小占据画布的宽度。
+- sHeight：图像在画布上的高度，会产生缩放效果。如果未指定，则图像不会缩放，按照实际大小占据画布的高度。
+- dx：画布内部的横坐标，用于放置图像的左上角
+- dy：画布内部的纵坐标，用于放置图像的右上角
+- dWidth：图像在画布内部的宽度，会产生缩放效果。
+- dHeight：图像在画布内部的高度，会产生缩放效果。
+
+如果`drawImage()`方法不放入画布的宽度和高度，可能会导致图像被裁减。因此，使用这个方法时，最好用图像的宽和高，设置画布的宽和高。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+var image = new Image(60, 45); 
+image.onload = drawImageActualSize;
+image.src = 'https://example.com/image.jpg';
+
+function drawImageActualSize() {
+  canvas.width = this.naturalWidth;
+  canvas.height = this.naturalHeight;
+  ctx.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight);
+}
+```
+
+上面代码中，`<canvas>`元素的大小设置成图像的本来大小，就能保证完整展示图像。由于图像的本来大小，只有图像加载成功以后才能拿到，因此调整画布的大小，必须放在`image.onload`这个监听函数里面。
 
 ### getImageData()，putImageData()
 
