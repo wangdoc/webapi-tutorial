@@ -480,35 +480,73 @@ function drawImageActualSize() {
 
 上面代码中，`<canvas>`元素的大小设置成图像的本来大小，就能保证完整展示图像。由于图像的本来大小，只有图像加载成功以后才能拿到，因此调整画布的大小，必须放在`image.onload`这个监听函数里面。
 
-### getImageData()，putImageData()
+### CanvasRenderingContext2D.getImageData()，CanvasRenderingContext2D.putImageData()，CanvasRenderingContext2D.createImageData()
 
-`getImageData`方法可以用来读取 Canvas 的内容，返回一个对象，包含了每个像素的信息。
-
-```javascript
-var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-```
-
-`imageData`对象有一个`data`属性，它的值是一个一维数组。该数组的值，依次是每个像素的红、绿、蓝、alpha 通道值，因此该数组的长度等于`图像的像素宽度 x 图像的像素高度 x 4`，每个值的范围是 0～255。这个数组不仅可读，而且可写，因此通过操作这个数组的值，就可以达到操作图像的目的。
-
-`putImageData`方法将一维的像素数组绘制在 Canvas 画布上。
+`CanvasRenderingContext2D.getImageData()`方法用来读取`<canvas>`的内容，返回一个 ImageData 对象，包含了每个像素的信息。
 
 ```javascript
-context.putImageData(imageData, 0, 0);
+ctx.getImageData(sx, sy, sw, sh)
 ```
 
-### toDataURL()
-
-对图像数据做出修改以后，可以使用`toDataURL`方法，将 Canvas 数据重新转化成一般的图像文件形式。
+`getImageData()`方法接受四个参数。`sx`和`sy`是读取区域的左上角坐标，`sw`和`sy`是读取区域的宽度和高度。如果想要读取整个`<canvas>`区域，可以写成下面这样。
 
 ```javascript
-function convertCanvasToImage(canvas) {
-  var image = new Image();
-  image.src = canvas.toDataURL('image/png');
-  return image;
-}
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 ```
 
-上面的代码将 Canvas 数据，转化成PNG data URI。
+`getImageData()`方法返回的是一个`ImageData`对象。该对象有三个属性。
+
+- ImageData.data：一个一维数组。该数组的值，依次是每个像素的红、绿、蓝、alpha 通道值（每个值的范围是 0～255），因此该数组的长度等于`图像的像素宽度 x 图像的像素高度 x 4`。这个数组不仅可读，而且可写，因此通过操作这个数组，就可以达到操作图像的目的。
+- ImageData.width：浮点数，表示 ImageData 的像素宽度。
+- ImageData.height：浮点数，表示 ImageData 的像素高度。
+
+`CanvasRenderingContext2D.putImageData()`方法将`ImageData`对象的像素绘制在`<canvas>`画布上。该方法有两种使用格式。
+
+```javascript
+ctx.putImageData(imagedata, dx, dy)
+ctx.putImageData(imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
+```
+
+该方法有如下参数。
+
+- imagedata：包含像素信息的 ImageData 对象。
+- dx：`<canvas>`元素内部的横坐标，用于放置 ImageData 图像的左上角。
+- dy：`<canvas>`元素内部的纵坐标，用于放置 ImageData 图像的左上角。
+- dirtyX：ImageData 图像内部的横坐标，用于作为放置到`<canvas>`的矩形区域的左上角的横坐标，默认为0。
+- dirtyY：ImageData 图像内部的纵坐标，用于作为放置到`<canvas>`的矩形区域的左上角的纵坐标，默认为0。
+- dirtyWidth：放置到`<canvas>`的矩形区域的宽度，默认为 ImageData 图像的宽度。
+- dirtyHeight：放置到`<canvas>`的矩形区域的高度，默认为 ImageData 图像的高度。
+
+下面是将 ImageData 对象绘制到`<canvas>`的例子。
+
+```javascript
+ctx.putImageData(imageData, 0, 0);
+```
+
+`CanvasRenderingContext2D.createImageData()`方法用于生成一个空的`ImageData`对象，所有像素都是透明的黑色（即每个值都是`0`）。该方法有两种使用格式。
+
+```javascript
+ctx.createImageData(width, height)
+ctx.createImageData(imagedata)
+```
+
+`createImageData()`方法的参数如下。
+
+- width：ImageData 对象的宽度，单位为像素。
+- height：ImageData 对象的高度，单位为像素。
+- imagedata：一个现有的 ImageData 对象，返回值将是这个对象的拷贝。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+var imageData = ctx.createImageData(100, 100);
+```
+
+上面代码中，`imageData`是一个 100 x 100 的像素区域，其中每个像素都是透明的黑色。
 
 ### save方法，restore方法
 
@@ -532,6 +570,78 @@ ctx.fillRect(180,10,150,100);
 ```
 
 上面代码先用`save`方法，保存了当前设置，然后绘制了一个有阴影的矩形。接着，使用`restore`方法，恢复了保存前的设置，绘制了一个没有阴影的矩形。
+
+## HTMLCanvasElement.toDataURL()，HTMLCanvasElement.toBlob()
+
+`<canvas>`元素的`toDataURL()`方法，可以将 Canvas 数据转为 Data URI 格式的图像。
+
+```javascript
+canvas.toDataURL(type, quality)
+```
+
+`toDataURL()`方法接受两个参数。
+
+- type：字符串，表示图像的格式。默认为`image/png`，另一个可用的值是`image/jpeg`，Chrome 浏览器还可以使用`image/webp`。
+- quality：浮点数，0到1之间，表示 JPEG 和 WebP 图像的质量系数，默认值为0.92。
+
+该方法的返回值是一个 Data URI 格式的字符串。
+
+```javascript
+function convertCanvasToImage(canvas) {
+  var image = new Image();
+  image.src = canvas.toDataURL('image/png');
+  return image;
+}
+```
+
+上面的代码将`<canvas>`元素，转化成PNG Data URI。
+
+```javascript
+var fullQuality = canvas.toDataURL('image/jpeg', 0.9);
+var mediumQuality = canvas.toDataURL('image/jpeg', 0.6);
+var lowQuality = canvas.toDataURL('image/jpeg', 0.3);
+```
+
+上面代码将`<canvas>`元素转成高画质、中画质、低画质三种 JPEG 图像。
+
+`HTMLCanvasElement.toBlob()`方法用于将`<canvas>`图像转成一个 Blob 对象，默认类型是`image/png`。它的使用格式如下。
+
+```javascript
+// 格式
+canvas.toBlob(callback, mimeType, quality)
+
+// 示例
+canvas.toBlob(function (blob) {...}, 'image/jpeg', 0.95)
+```
+
+`toBlob()`方法可以接受三个参数。
+
+- callback：回调函数。它接受生成的 Blob 对象作为参数。
+- mimeType：字符串，图像的 MIMEType 类型，默认是`image/png`。
+- quality：浮点数，0到1之间，表示图像的质量，只对`image/jpeg`和`image/webp`类型的图像有效。
+
+注意，该方法没有返回值。
+
+下面的例子将`<canvas>`图像复制成`<img>`图像。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+
+function blobToImg(blob) {
+  var newImg = document.createElement('img');
+  var url = URL.createObjectURL(blob);
+
+  newImg.onload = functio () {
+    // 使用完毕，释放 URL 对象
+    URL.revokeObjectURL(url);
+  };
+
+  newImg.src = url;
+  document.body.appendChild(newImg);
+}
+
+canvas.toBlob(blobToImg);
+```
 
 ## 图像变换
 
