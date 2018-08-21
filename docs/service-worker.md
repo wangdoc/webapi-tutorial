@@ -24,3 +24,94 @@ self.addEventListener('fetch', (event) => {
 ```
 
 Service Worker 不能直接操作 DOM。
+
+## 使用步骤
+
+### 登记
+
+```javascript
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js').then (registration => {
+        console.log('Service Worker registered successfully!')
+    }, (error) => {
+        console.log('Error in registering service worker', error)
+    })
+}
+```
+
+默认情况下，Service worker 只对根目录`/`生效，如果要改变生效范围，可以运行下面的代码。
+
+```javascript
+navigator.serviceWorker.register(
+  '/service-worker.js',
+  { scope: '/products/fashion' }
+)
+```
+
+### 安装
+
+一旦登记成功，接下来都是 Service worker 脚本的工作。
+
+```javascript
+self.addEventListener('install', (event) => {
+    let CACHE_NAME = 'xyz-cache'
+    let urlsToCache = [
+        '/',
+        '/styles/main.css',
+        '/scripts/bundle.js'
+    ]
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+        .then (cache => cache.addAll(urlsToCache))
+    )
+})
+```
+
+### 激活
+
+安装完成后，Service worker 就会等待激活。
+
+```javascript
+self.addEventListener('activate', (event) => {
+    let cacheWhitelist = ['products-v2']
+
+    event.waitUntil(
+        caches.keys().then (cacheNames => {
+            return Promise.all(
+                cacheNames.map( cacheName => {
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName)
+                    }
+                })
+            )
+        })
+    )
+})
+```
+
+## Service Worker 与网页的通信
+
+```javascript
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        self.clients.matchAll().then ( (client) => {
+            client.postMessage({
+                msg: 'Hey, from service worker! I\'m listening to your fetch requests.',
+                source: 'service-worker'
+            })
+        })
+    )
+})
+```
+
+上面代码中，Service Worker 监听`activate`事件，然后向客户端发送一条信息。
+
+客户端需要部署消息监听代码。
+
+```javascript
+this.addEventListener('message', (data) => {
+    if (data.source == 'service-worker') {
+        console.log(data.msg)
+    }
+})
+```
