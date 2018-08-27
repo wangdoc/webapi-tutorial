@@ -430,23 +430,14 @@ ctx.fillRect(10, 10, 100, 100);
 
 ### CanvasRenderingContext2D.drawImage()
 
-Canvas API 允许将图像文件插入画布，做法是读取图片后，使用`drawImage()`方法将这张图片放上画布。
+Canvas API 允许将图像文件写入画布，做法是读取图片后，使用`drawImage()`方法将这张图片放上画布。
+
+`CanvasRenderingContext2D.drawImage()`有三种使用格式。
 
 ```javascript
-var canvas = document.getElementById('myCanvas');
-var ctx = canvas.getContext('2d');
-
-var img = new Image();
-img.src = 'image.png';
-ctx.drawImage(img, 0, 0); // 将图像放置在画布，后两个参数是图像左上角的坐标
-```
-
-上面代码将一个 PNG 图像放入画布。`drawImage()`方法的第一个参数是图像元素（即`<img>`节点），第二个和第三个参数是画布左上角的图像坐标，上例中的`(0, 0)`就表示将图像左上角放置在画布的左上角。
-
-`drawImage()`方法的完整格式如下。
-
-```javascript
-ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+ctx.drawImage(image, dx, dy);
+ctx.drawImage(image, dx, dy, dWidth, dHeight);
+ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 ```
 
 各个参数的含义如下。
@@ -461,13 +452,28 @@ ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
 - dWidth：图像在画布内部的宽度，会产生缩放效果。
 - dHeight：图像在画布内部的高度，会产生缩放效果。
 
-如果`drawImage()`方法不放入画布的宽度和高度，可能会导致图像被裁减。因此，使用这个方法时，最好用图像的宽和高，设置画布的宽和高。
+下面是最简单的使用场景，将图像放在画布上，两者左上角对齐。
 
 ```javascript
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 
-var image = new Image(60, 45); 
+var img = new Image();
+img.src = 'image.png';
+img.onload = function () {
+  ctx.drawImage(img, 0, 0);
+};
+```
+
+上面代码将一个 PNG 图像放入画布。这时，图像将是原始大小，如果画布小于图像，就会只显示出图像左上角，正好等于画布大小的那一块。
+
+如果要显示完整的图片，可以用图像的宽和高，设置成画布的宽和高。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+var image = new Image(60, 45);
 image.onload = drawImageActualSize;
 image.src = 'https://example.com/image.jpg';
 
@@ -548,28 +554,47 @@ var imageData = ctx.createImageData(100, 100);
 
 上面代码中，`imageData`是一个 100 x 100 的像素区域，其中每个像素都是透明的黑色。
 
-### save方法，restore方法
+### CanvasRenderingContext2D.save()，CanvasRenderingContext2D.restore()
 
-save方法用于保存上下文环境，restore方法用于恢复到上一次保存的上下文环境。
+`CanvasRenderingContext2D.save()`方法用于将画布的当前样式保存到堆栈，相当于在内存之中产生一个样式快照。
 
 ```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
 ctx.save();
-
-ctx.shadowOffsetX = 10;
-ctx.shadowOffsetY = 10;
-ctx.shadowBlur = 5;
-ctx.shadowColor = 'rgba(0,0,0,0.5)';
-
-ctx.fillStyle = '#CC0000';
-ctx.fillRect(10,10,150,100);
-
-ctx.restore();
-
-ctx.fillStyle = '#000000';
-ctx.fillRect(180,10,150,100);
 ```
 
-上面代码先用`save`方法，保存了当前设置，然后绘制了一个有阴影的矩形。接着，使用`restore`方法，恢复了保存前的设置，绘制了一个没有阴影的矩形。
+上面代码中，`save()`会为画布的默认样式产生一个快照。
+
+`CanvasRenderingContext2D.restore()`方法将画布的样式恢复到上一个保存的快照，如果没有已保存的快照，则不产生任何效果。
+
+上下文环境，restore方法用于恢复到上一次保存的上下文环境。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.save();
+
+ctx.fillStyle = 'green';
+ctx.restore();
+
+ctx.fillRect(10, 10, 100, 100);
+```
+
+上面代码画一个矩形。矩形的填充色本来设为绿色，但是`restore()`方法撤销了这个设置，将样式恢复上一次保存的状态（即默认样式），所以实际的填充色是黑色（默认颜色）。
+
+### CanvasRenderingContext2D.canvas
+
+`CanvasRenderingContext2D.canvas`属性指向当前`CanvasRenderingContext2D`对象所在的`<canvas>`元素。该属性只读。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.canvas === canvas // true
+```
 
 ## HTMLCanvasElement.toDataURL()，HTMLCanvasElement.toBlob()
 
