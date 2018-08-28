@@ -596,6 +596,80 @@ var ctx = canvas.getContext('2d');
 ctx.canvas === canvas // true
 ```
 
+### 图像变换
+
+以下方法用于图像变换。
+
+- `CanvasRenderingContext2D.rotate()`：图像旋转
+- `CanvasRenderingContext2D.scale()`：图像缩放
+- `CanvasRenderingContext2D.translate()`：图像平移
+
+`CanvasRenderingContext2D.rotate()`方法用于图像旋转。它接受一个弧度值作为参数，表示顺时针旋转的度数。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.rotate(45 * Math.PI / 180);
+ctx.fillRect(70, 0, 100, 30);
+```
+
+上面代码会显示一个顺时针倾斜45度的矩形。注意，`rotate()`方法必须在`fillRect()`方法之前调用，否则是不起作用的。
+
+旋转中心点始终是画布左上角的原点。如果要更改中心点，需要使用`translate()`方法移动画布。
+
+`CanvasRenderingContext2D.scale()`方法用于缩放图像。它接受两个参数，分别是`x`轴方向的缩放因子和`y`轴方向的缩放因子。默认情况下，一个单位就是一个像素，缩放因子可以缩放单位，比如缩放因子`0.5`表示将大小缩小为原来的50%，缩放因子`10`表示放大十倍。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.scale(10, 3);
+ctx.fillRect(10, 10, 10, 10);
+```
+
+上面代码中，原来的矩形是 10 x 10，缩放后展示出来是 100 x 30。
+
+如果缩放因子为1，就表示图像没有任何缩放。如果为-1，则表示方向翻转。`ctx.scale(-1, 1)`为水平翻转，`ctx.scale(1, -1)`表示垂直翻转。
+
+```javascript
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+ctx.scale(1, -2);
+ctx.font = "16px serif";
+ctx.fillText('Hello world!', 20, -20);
+```
+
+上面代码会显示一个水平倒转的、高度放大2倍的`Hello World!`。
+
+
+```javascript
+ctx.translate( x, y )//位移：把图像原点位移到(x， y)的位置
+ctx.rotate( deg )//旋转：旋转 deg 度数
+ctx.scale( sx, sy )//缩放：在横向进行 sx 倍的缩放，在纵向进行 sy 倍的缩放
+```
+
+缩放出现的问题
+1.如果有`lineWith`，宽度也会缩放
+2.如果起始点不是`(0, 0)`，起始点也会缩放
+
+### 变换矩阵
+
+```javascript
+ctx.transform(a, b, c, d, e, f);
+/*
+a:水平缩放(默认值1)
+b:水平倾斜(默认值0)
+c:垂直倾斜(默认值0)
+d:垂直缩放(默认值1)
+e:水平位移(默认值0)
+f:垂直位移(默认值0)
+*/
+```
+
+`context.transform()`可以叠加使用，如果需要重新初始化矩阵变换的值，可以用`context.setTransform(a, b, c, d, e, f)`。它会使得之前设置的`context.transform()`失效，恢复为单位矩阵然后再`transform`。
+
 ## HTMLCanvasElement.toDataURL()，HTMLCanvasElement.toBlob()
 
 `<canvas>`元素的`toDataURL()`方法，可以将 Canvas 数据转为 Data URI 格式的图像。
@@ -667,36 +741,6 @@ function blobToImg(blob) {
 
 canvas.toBlob(blobToImg);
 ```
-
-## 图像变换
-
-### 平移、旋转、缩放
-
-```javascript
-ctx.translate( x, y )//位移：把图像原点位移到(x， y)的位置
-ctx.rotate( deg )//旋转：旋转 deg 度数
-ctx.scale( sx, sy )//缩放：在横向进行 sx 倍的缩放，在纵向进行 sy 倍的缩放
-```
-
-缩放出现的问题
-1.如果有`lineWith`，宽度也会缩放
-2.如果起始点不是`(0, 0)`，起始点也会缩放
-
-### 变换矩阵
-
-```javascript
-ctx.transform(a, b, c, d, e, f);
-/*
-a:水平缩放(默认值1)
-b:水平倾斜(默认值0)
-c:垂直倾斜(默认值0)
-d:垂直缩放(默认值1)
-e:水平位移(默认值0)
-f:垂直位移(默认值0)
-*/
-```
-
-`context.transform()`可以叠加使用，如果需要重新初始化矩阵变换的值，可以用`context.setTransform(a, b, c, d, e, f)`。它会使得之前设置的`context.transform()`失效，恢复为单位矩阵然后再`transform`。
 
 ## 动画
 
