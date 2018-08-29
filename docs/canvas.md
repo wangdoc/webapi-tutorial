@@ -486,7 +486,15 @@ function drawImageActualSize() {
 
 上面代码中，`<canvas>`元素的大小设置成图像的本来大小，就能保证完整展示图像。由于图像的本来大小，只有图像加载成功以后才能拿到，因此调整画布的大小，必须放在`image.onload`这个监听函数里面。
 
-### CanvasRenderingContext2D.getImageData()，CanvasRenderingContext2D.putImageData()，CanvasRenderingContext2D.createImageData()
+### 像素读写
+
+以下三个方法与像素读写相关。
+
+- `CanvasRenderingContext2D.getImageData()`：将画布读取成一个 ImageData 对象
+- `CanvasRenderingContext2D.putImageData()`：将 ImageData 对象写入画布
+- `CanvasRenderingContext2D.createImageData()`：生成 ImageData 对象
+
+**（1）getImageData()**
 
 `CanvasRenderingContext2D.getImageData()`方法用来读取`<canvas>`的内容，返回一个 ImageData 对象，包含了每个像素的信息。
 
@@ -508,6 +516,8 @@ var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 - ImageData.data：一个一维数组。该数组的值，依次是每个像素的红、绿、蓝、alpha 通道值（每个值的范围是 0～255），因此该数组的长度等于`图像的像素宽度 x 图像的像素高度 x 4`。这个数组不仅可读，而且可写，因此通过操作这个数组，就可以达到操作图像的目的。
 - ImageData.width：浮点数，表示 ImageData 的像素宽度。
 - ImageData.height：浮点数，表示 ImageData 的像素高度。
+
+**（2）putImageData()**
 
 `CanvasRenderingContext2D.putImageData()`方法将`ImageData`对象的像素绘制在`<canvas>`画布上。该方法有两种使用格式。
 
@@ -531,6 +541,8 @@ ctx.putImageData(imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
 ```javascript
 ctx.putImageData(imageData, 0, 0);
 ```
+
+**（3）createImageData()**
 
 `CanvasRenderingContext2D.createImageData()`方法用于生成一个空的`ImageData`对象，所有像素都是透明的黑色（即每个值都是`0`）。该方法有两种使用格式。
 
