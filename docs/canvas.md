@@ -728,7 +728,7 @@ ctx.fillRect(0, 0, 100, 100);
 
 除了`CanvasRenderingContext2D`对象提供的方法，`<canvas>`元素本身也有自己的方法。
 
-### HTMLCanvasElement.toDataURL()，HTMLCanvasElement.toBlob()
+### HTMLCanvasElement.toDataURL()
 
 `<canvas>`元素的`toDataURL()`方法，可以将 Canvas 数据转为 Data URI 格式的图像。
 
@@ -760,6 +760,8 @@ var lowQuality = canvas.toDataURL('image/jpeg', 0.3);
 ```
 
 上面代码将`<canvas>`元素转成高画质、中画质、低画质三种 JPEG 图像。
+
+### HTMLCanvasElement.toBlob()
 
 `HTMLCanvasElement.toBlob()`方法用于将`<canvas>`图像转成一个 Blob 对象，默认类型是`image/png`。它的使用格式如下。
 
@@ -800,94 +802,73 @@ function blobToImg(blob) {
 canvas.toBlob(blobToImg);
 ```
 
-## 动画
+## Canvas 使用实例
 
-利用 JavaScript，可以在 Canvas 元素上很容易地产生动画效果。
+### 动画效果
+
+通过改变坐标，很容易在画布 Canvas 元素上产生动画效果。
 
 ```javascript
-var posX = 20,
-    posY = 100;
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
 
-setInterval(function() {
-	context.fillStyle = "black";
-    context.fillRect(0,0,canvas.width, canvas.height);
+var posX = 20;
+var posY = 100;
 
-	posX += 1;
-	posY += 0.25;
+setInterval(function () {
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-	context.beginPath();
-	context.fillStyle = "white";
+  posX += 1;
+  posY += 0.25;
 
-	context.arc(posX, posY, 10, 0, Math.PI*2, true); 
-	context.closePath();
-	context.fill();
+  ctx.beginPath();
+  ctx.fillStyle = 'white';
+
+  ctx.arc(posX, posY, 10, 0, Math.PI * 2, true);
+  ctx.closePath();
+  ctx.fill();
 }, 30);
 ```
 
-上面代码会产生一个小圆点，每隔30毫秒就向右下方移动的效果。`setInterval`函数的一开始，之所以要将画布重新渲染黑色底色，是为了抹去上一步的小圆点。
+上面代码会产生一个小圆点，每隔30毫秒就向右下方移动的效果。`setInterval()`函数的一开始，之所以要将画布重新渲染黑色底色，是为了抹去上一步的小圆点。
 
-通过设置圆心坐标，可以产生各种运动轨迹。
-
-先上升后下降。
+在这个例子的基础上，通过设置圆心坐标，可以产生各种运动轨迹。下面是先上升后下降的例子。
 
 ```javascript
-var vx = 10,
-    vy = -10,
-    gravity = 1;
+var vx = 10;
+var vy = -10;
+var gravity = 1;
 
-setInterval(function() {
-    posX += vx;
-    posY += vy;
-    vy += gravity;
-	// ...
+setInterval(function () {
+  posX += vx;
+  posY += vy;
+  vy += gravity;
+  // ...
 });
 ```
 
 上面代码中，`x`坐标始终增大，表示持续向右运动。`y`坐标先变小，然后在重力作用下，不断增大，表示先上升后下降。
 
-小球不断反弹后，逐步趋于静止。
+### 像素处理
 
-```javascript
-var vx = 10,
-    vy = -10,
-    gravity = 1;
+通过`getImageData()`方法和`putImageData()`方法，可以处理每个像素，进而操作图像内容，因此可以改写图像。
 
-setInterval(function() {
-    posX += vx;
-    posY += vy;
-
-	if (posY > canvas.height * 0.75) {
-          vy *= -0.6;
-          vx *= 0.75;
-          posY = canvas.height * 0.75;
-    }
-	
-    vy += gravity;
-	// ...
-});
-```
-
-上面代码表示，一旦小球的y坐标处于屏幕下方75%的位置，向x轴移动的速度变为原来的75%，而向y轴反弹上一次反弹高度的40%。
-
-## 像素处理
-
-通过`getImageData`方法和`putImageData`方法，可以处理每个像素，进而操作图像内容。
-
-假定`filter`是一个处理像素的函数，那么整个对Canvas的处理流程，可以用下面的代码表示。
+下面是图像处理的通用写法。
 
 ```javascript
 if (canvas.width > 0 && canvas.height > 0) {
-	var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
   filter(imageData);
   context.putImageData(imageData, 0, 0);
 }
 ```
 
-以下是几种常见的处理方法。
+上面代码中，`filter`是一个处理像素的函数。以下是几种常见的`filter`。
 
-### 灰度效果
+**（1）灰度效果**
 
-灰度图（grayscale）就是取红、绿、蓝三个像素值的算术平均值，这实际上将图像转成了黑白形式。假定`d[i]`是像素数组中一个象素的红色值，则`d[i+1]`为绿色值，`d[i+2]`为蓝色值，`d[i+3]`就是 alpha 通道值。转成灰度的算法，就是将红、绿、蓝三个值相加后除以3，再将结果写回数组。
+灰度图（grayscale）就是取红、绿、蓝三个像素值的算术平均值，这实际上将图像转成了黑白形式。
 
 ```javascript
 grayscale = function (pixels) {
@@ -896,15 +877,17 @@ grayscale = function (pixels) {
     var r = d[i];
     var g = d[i + 1];
     var b = d[i + 2];
-    d[i] = d[i + 1] = d[i + 2] = (r+g+b)/3;
+    d[i] = d[i + 1] = d[i + 2] = (r + g + b) / 3;
   }
   return pixels;
 };
 ```
 
-### 复古效果
+上面代码中，`d[i]`是红色值，`d[i+1]`是绿色值，`d[i+2]`是蓝色值，`d[i+3]`是 alpha 通道值。转成灰度的算法，就是将红、绿、蓝三个值相加后除以3，再将结果写回数组。
 
-复古效果（sepia）则是将红、绿、蓝三个像素，分别取这三个值的某种加权平均值，使得图像有一种古旧的效果。
+**（2）复古效果**
+
+复古效果（sepia）是将红、绿、蓝三种值，分别取这三个值的某种加权平均值，使得图像有一种古旧的效果。
 
 ```javascript
 sepia = function (pixels) {
@@ -913,15 +896,15 @@ sepia = function (pixels) {
       var r = d[i];
       var g = d[i + 1];
       var b = d[i + 2];
-      d[i]     = (r * 0.393)+(g * 0.769)+(b * 0.189); // red
-      d[i + 1] = (r * 0.349)+(g * 0.686)+(b * 0.168); // green
-      d[i + 2] = (r * 0.272)+(g * 0.534)+(b * 0.131); // blue
+      d[i]     = (r * 0.393) + (g * 0.769) + (b * 0.189); // red
+      d[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168); // green
+      d[i + 2] = (r * 0.272) + (g * 0.534) + (b * 0.131); // blue
     }
     return pixels;
 };
 ```
 
-### 红色蒙版效果
+**（3）红色蒙版效果**
 
 红色蒙版指的是，让图像呈现一种偏红的效果。算法是将红色通道设为红、绿、蓝三个值的平均值，而将绿色通道和蓝色通道都设为0。
 
@@ -932,14 +915,14 @@ var red = function (pixels) {
     var r = d[i];
     var g = d[i + 1];
     var b = d[i + 2];
-    d[i] = (r+g+b)/3;        // 红色通道取平均值
+    d[i] = (r + g + b)/3;        // 红色通道取平均值
     d[i + 1] = d[i + 2] = 0; // 绿色通道和蓝色通道都设为0
   }
   return pixels;
 };
 ```
 
-### 亮度效果
+**（4）亮度效果**
 
 亮度效果（brightness）是指让图像变得更亮或更暗。算法将红色通道、绿色通道、蓝色通道，同时加上一个正值或负值。
 
@@ -949,25 +932,25 @@ var brightness = function (pixels, delta) {
   for (var i = 0; i < d.length; i += 4) {
     d[i] += delta;     // red
     d[i + 1] += delta; // green
-    d[i + 2] += delta; // blue   
+    d[i + 2] += delta; // blue
   }
   return pixels;
 };
 ```
 
-### 反转效果
+**（5）反转效果**
 
-反转效果（invert）是指图片呈现一种色彩颠倒的效果。算法为红、绿、蓝通道都取各自的相反值（255-原值）。
+反转效果（invert）是指图片呈现一种色彩颠倒的效果。算法为红、绿、蓝通道都取各自的相反值（`255 - 原值`）。
 
 ```javascript
 invert = function (pixels) {
   var d = pixels.data;
   for (var i = 0; i < d.length; i += 4) {
-		d[i] = 255 - d[i];
-		d[i+1] = 255 - d[i + 1];
-		d[i+2] = 255 - d[i + 2];
-	}
-	return pixels;
+    d[i] = 255 - d[i];
+    d[i + 1] = 255 - d[i + 1];
+    d[i + 2] = 255 - d[i + 2];
+  }
+  return pixels;
 };
 ```
 
