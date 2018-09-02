@@ -29,15 +29,17 @@ Service Worker 不能直接操作 DOM。
 
 ### 登记
 
+使用 service worker 的第一步，就是告诉浏览器，需要注册一个 service worker 脚本。
+
 ```javascript
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js').then (registration => {
-        console.log('Service Worker registered successfully!')
-    }, (error) => {
-        console.log('Error in registering service worker', error)
-    })
-}
+navigator.serviceWorker.register('sw.js'.then(() => {
+  console.info('注册成功')
+}).catch((err) => {
+  console.error('注册失败')
+})
 ```
+
+上面代码的`sw.js`就是需要浏览器注册的 service worker 脚本。注意，这个脚本必须与当前网址同域，service worker 不支持跨与脚本。另外，`sw.js`必须是从 HTTPS 协议加载的。
 
 默认情况下，Service worker 只对根目录`/`生效，如果要改变生效范围，可以运行下面的代码。
 
@@ -50,7 +52,18 @@ navigator.serviceWorker.register(
 
 ### 安装
 
-一旦登记成功，接下来都是 Service worker 脚本的工作。
+一旦登记成功，接下来都是 service worker 脚本的工作。下面的代码都是写在 service worker 脚本里面的。
+
+登记后，就会触发`install`事件。service worker 脚本需要监听这个事件。
+
+```javascript
+self.addEventListener('install', event => {
+
+  event.waitUntil(() => console.info('安装完成'))
+})
+```
+
+`event.waitUntil()`方法为事件完成后指定回调函数。
 
 ```javascript
 self.addEventListener('install', (event) => {
@@ -69,7 +82,7 @@ self.addEventListener('install', (event) => {
 
 ### 激活
 
-安装完成后，Service worker 就会等待激活。
+安装完成后，service worker 就会等待激活。
 
 ```javascript
 self.addEventListener('activate', (event) => {
@@ -115,3 +128,7 @@ this.addEventListener('message', (data) => {
     }
 })
 ```
+
+## 参考链接
+
+- [Service Workers](https://frontendian.co/service-workers), by Ryan Miller
