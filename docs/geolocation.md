@@ -2,7 +2,7 @@
 
 Geolocation API 用于获取用户的地理位置。
 
-由于该功能涉及用户隐私，所以浏览器会提示用户，是否同意给出地理位置。另外，这个 API 只能在 HTTPS 环境使用。
+由于该功能涉及用户隐私，所以浏览器会提示用户，是否同意给出地理位置，用户可能会拒绝。另外，这个 API 只能在 HTTPS 环境使用。
 
 浏览器通过`navigator.geolocation`属性提供该 API。
 
@@ -126,3 +126,31 @@ navigator.geolocation.clearWatch(id);
 
 使用方法的例子见上一节。
 
+## Coordinates 对象
+
+Coordinates 对象是地理位置的坐标接口，`Position.coords`属性返回的就是这个对象。
+
+它有以下属性，全部为只读属性。
+
+- `Coordinates.latitude`：浮点数，表示纬度。
+- `Coordinates.longitude`：浮点数，表示经度。
+- `Coordinates.altitude`：浮点数，表示海拔（单位：米）。如果不可得，返回`null`。
+- `Coordinates.accuracy`：浮点数，表示经度和纬度的精度（单位：米）。
+- `Coordinates.altitudeAccuracy`：浮点数，表示海拔的精度（单位：米）。返回`null`。
+- `Coordinates.speed`：浮点数，表示设备的速度（单位：米/秒）。如果不可得，返回`null`。
+- `Coordinates.heading`：浮点数，表示设备前进的方向（单位：度）。方向按照顺时针，北方是0度，东方是90度，西方是270度。如果`Coordinates.speed`为0，`heading`属性返回`NaN`。如果设备无法提供方向信息，该属性返回`null`。
+
+下面是一个例子。
+
+```javascript
+navigator.geolocation.getCurrentPosition( function (position) {
+  let lat = position.coords.latitude;
+  let long = position.coords.longitude;
+  console.log(`纬度：${lat.toFixed(2)}`);
+  console.log(`经度：${long.toFixed(2)}`);
+});
+```
+
+## 参考链接
+
+- [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API), by MDN
