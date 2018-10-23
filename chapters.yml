@@ -2,6 +2,7 @@
 - fontface.md: FontFace API
 - geolocation.md: Geolocation API
 - intersectionObserver.md: IntersectionObserver
+- intl-relativetimeformat.md: Intl.RelativeTimeFormat
 - server-sent-events.md: Server-Sent Events
 - svg.md: SVG 图像
 - websocket.md: WebSocket
