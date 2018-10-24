@@ -4,6 +4,7 @@
 - intersectionObserver.md: IntersectionObserver
 - intl-relativetimeformat.md: Intl.RelativeTimeFormat
 - page-lifecycle.md: Page Lifecycle API
+- page-visibility.md: Page Visibility API
 - server-sent-events.md: Server-Sent Events
 - svg.md: SVG 图像
 - websocket.md: WebSocket
