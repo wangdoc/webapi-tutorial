@@ -112,7 +112,7 @@ document.onfreeze = function() { … }
 
 `resume`事件在网页离开 Frozen 阶段，变为 Active / Passive / Hidden 阶段时触发。
 
-`document.onresume`属性指定用户重新访问页面，是的页面离开 Frozen 阶段、进入可用阶段时调用的回调函数。
+`document.onresume`属性指的是页面离开 Frozen 阶段、进入可用状态时调用的回调函数。
 
 ```javascript
 function handleResume(e) {
