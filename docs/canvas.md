@@ -37,14 +37,14 @@ Canvas 画布提供了一个作图的平面空间，该空间的每个点都有�
 
 以下方法和属性用来绘制路径。
 
-- CanvasRenderingContext2D.beginPath()：开始绘制路径。
-- CanvasRenderingContext2D.closePath()：结束路径，返回到当前路径的起始点，会从当前点到起始点绘制一条直线。如果图形已经封闭，或者只有一个点，那么此方法不会产生任何效果。
-- CanvasRenderingContext2D.moveTo()：设置路径的起点，即将一个新路径的起始点移动到`(x，y)`坐标。
-- CanvasRenderingContext2D.lineTo()：使用直线从当前点连接到`(x, y)`坐标。
-- CanvasRenderingContext2D.fill()：在路径内部填充颜色（默认为黑色）。
-- CanvasRenderingContext2D.stroke()：路径线条着色（默认为黑色）。
-- CanvasRenderingContext2D.fillStyle：指定路径填充的颜色和样式（默认为黑色）。
-- CanvasRenderingContext2D.strokeStyle：指定路径线条的颜色和样式（默认为黑色）。
+- `CanvasRenderingContext2D.beginPath()`：开始绘制路径。
+- `CanvasRenderingContext2D.closePath()`：结束路径，返回到当前路径的起始点，会从当前点到起始点绘制一条直线。如果图形已经封闭，或者只有一个点，那么此方法不会产生任何效果。
+- `CanvasRenderingContext2D.moveTo()`：设置路径的起点，即将一个新路径的起始点移动到`(x，y)`坐标。
+- `CanvasRenderingContext2D.lineTo()`：使用直线从当前点连接到`(x, y)`坐标。
+- `CanvasRenderingContext2D.fill()`：在路径内部填充颜色（默认为黑色）。
+- `CanvasRenderingContext2D.stroke()`：路径线条着色（默认为黑色）。
+- `CanvasRenderingContext2D.fillStyle`：指定路径填充的颜色和样式（默认为黑色）。
+- `CanvasRenderingContext2D.strokeStyle`：指定路径线条的颜色和样式（默认为黑色）。
 
 ```javascript
 var canvas = document.getElementById('myCanvas');
@@ -82,12 +82,12 @@ ctx.stroke();
 
 以下的方法和属性控制线条的视觉特征。
 
-- CanvasRenderingContext2D.lineWidth：指定线条的宽度，默认为1.0。
-- CanvasRenderingContext2D.lineCap：指定线条末端的样式，有三个可能的值：butt（默认值，末端为矩形）、round（末端为圆形）、square（末端为突出的矩形）。
-- CanvasRenderingContext2D.lineJoin：指定线段交点的样式，有三个可能的值：round（交点为扇形）、bevel（交点为三角形底边）、miter（默认值，交点为菱形)。
-- CanvasRenderingContext2D.miterLimit：指定交点菱形的长度，默认为10。该属性只在`lineJoin`属性的值等于`miter`时有效。
-- CanvasRenderingContext2D.getLineDash()：返回一个数组，表示虚线里面线段和间距的长度。
-- CanvasRenderingContext2D.setLineDash()：数组，用于指定虚线里面线段和间距的长度。
+- `CanvasRenderingContext2D.lineWidth`：指定线条的宽度，默认为1.0。
+- `CanvasRenderingContext2D.lineCap`：指定线条末端的样式，有三个可能的值：`butt`（默认值，末端为矩形）、`round`（末端为圆形）、`square`（末端为突出的矩形，矩形宽度不变，高度为线条宽度的一半）。
+- `CanvasRenderingContext2D.lineJoin`：指定线段交点的样式，有三个可能的值：`round`（交点为扇形）、`bevel`（交点为三角形底边）、`miter`（默认值，交点为菱形)。
+- `CanvasRenderingContext2D.miterLimit`：指定交点菱形的长度，默认为10。该属性只在`lineJoin`属性的值等于`miter`时有效。
+- `CanvasRenderingContext2D.getLineDash()`：返回一个数组，表示虚线里面线段和间距的长度。
+- `CanvasRenderingContext2D.setLineDash()`：数组，用于指定虚线里面线段和间距的长度。
 
 ```javascript
 var canvas = document.getElementById('myCanvas');
@@ -111,10 +111,10 @@ ctx.stroke();
 
 以下方法用来绘制矩形。
 
-- CanvasRenderingContext2D.rect()：绘制矩形路径。
-- CanvasRenderingContext2D.fillRect()：填充一个矩形。
-- CanvasRenderingContext2D.strokeRect()：绘制矩形边框。
-- CanvasRenderingContext2D.clearRect()：指定矩形区域的像素都变成透明。
+- `CanvasRenderingContext2D.rect()`：绘制矩形路径。
+- `CanvasRenderingContext2D.fillRect()`：填充一个矩形。
+- `CanvasRenderingContext2D.strokeRect()`：绘制矩形边框。
+- `CanvasRenderingContext2D.clearRect()`：指定矩形区域的像素都变成透明。
 
 上面四个方法的格式都一样，都接受四个参数，分别是矩形左上角的横坐标和纵坐标、矩形的宽和高。
 
@@ -229,13 +229,13 @@ ctx.stroke();
 
 以下方法和属性用于绘制文本。
 
-- CanvasRenderingContext2D.fillText()：在指定位置绘制实心字符。
-- CanvasRenderingContext2D.strokeText()：在指定位置绘制空心字符。
-- CanvasRenderingContext2D.measureText()：返回一个 TextMetrics 对象。
-- CanvasRenderingContext2D.font：指定字型大小和字体，默认值为`10px sans-serif`。
-- CanvasRenderingContext2D.textAlign：文本的对齐方式，默认值为`start`。
-- CanvasRenderingContext2D.direction：文本的方向，默认值为`inherit`。
-- CanvasRenderingContext2D.textBaseline：文本的垂直位置，默认值为`alphabetic`。
+- `CanvasRenderingContext2D.fillText()`：在指定位置绘制实心字符。
+- `CanvasRenderingContext2D.strokeText()`：在指定位置绘制空心字符。
+- `CanvasRenderingContext2D.measureText()`：返回一个 TextMetrics 对象。
+- `CanvasRenderingContext2D.font`：指定字型大小和字体，默认值为`10px sans-serif`。
+- `CanvasRenderingContext2D.textAlign`：文本的对齐方式，默认值为`start`。
+- `CanvasRenderingContext2D.direction`：文本的方向，默认值为`inherit`。
+- `CanvasRenderingContext2D.textBaseline`：文本的垂直位置，默认值为`alphabetic`。
 
 `fillText()`方法用来在指定位置绘制实心字符。
 
@@ -327,9 +327,9 @@ text2.width // 107.78
 
 以下方法用于设置渐变效果和图像填充效果。
 
-- CanvasRenderingContext2D.createLinearGradient()：定义线性渐变样式。
-- CanvasRenderingContext2D.createRadialGradient()：定义辐射渐变样式。
-- CanvasRenderingContext2D.createPattern()：定义图像填充样式。
+- `CanvasRenderingContext2D.createLinearGradient()`：定义线性渐变样式。
+- `CanvasRenderingContext2D.createRadialGradient()`：定义辐射渐变样式。
+- `CanvasRenderingContext2D.createPattern()`：定义图像填充样式。
 
 `createLinearGradient()`方法按照给定直线，生成线性渐变的样式。
 
@@ -406,10 +406,10 @@ img.onload = function( ) {
 
 以下属性用于设置阴影。
 
-- CanvasRenderingContext2D.shadowBlur：阴影的模糊效果，默认为`0`。
-- CanvasRenderingContext2D.shadowColor：阴影的颜色，默认为`black`。
-- CanvasRenderingContext2D.shadowOffsetX：阴影的水平位移，默认为`0`。
-- CanvasRenderingContext2D.shadowOffsetY：阴影的垂直位移，默认为`0`。
+- `CanvasRenderingContext2D.shadowBlur`：阴影的模糊程度，默认为`0`。
+- `CanvasRenderingContext2D.shadowColor`：阴影的颜色，默认为`black`。
+- `CanvasRenderingContext2D.shadowOffsetX`：阴影的水平位移，默认为`0`。
+- `CanvasRenderingContext2D.shadowOffsetY`：阴影的垂直位移，默认为`0`。
 
 下面是一个例子。
 
