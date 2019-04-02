@@ -502,7 +502,7 @@ function drawImageActualSize() {
 ctx.getImageData(sx, sy, sw, sh)
 ```
 
-`getImageData()`方法接受四个参数。`sx`和`sy`是读取区域的左上角坐标，`sw`和`sy`是读取区域的宽度和高度。如果想要读取整个`<canvas>`区域，可以写成下面这样。
+`getImageData()`方法接受四个参数。`sx`和`sy`是读取区域的左上角坐标，`sw`和`sh`是读取区域的宽度和高度。如果想要读取整个`<canvas>`区域，可以写成下面这样。
 
 ```javascript
 var canvas = document.getElementById('myCanvas');
