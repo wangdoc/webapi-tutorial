@@ -2,102 +2,47 @@
 
 ## 概述
 
-各种网站往往需要一些相同的模块，比如日历、调色板等等，这种模块就被称为“组件”（component）。Web Components 就是网页组件式开发的技术规范。
+各种网站往往需要一些相同的模块，比如日历、调色板等等，这种模块就被称为“组件”（component）。Web Components 就是浏览器原生的组件规范。
 
-采用组件进行网站开发，有很多优点。
+采用组件开发，有很多优点。
 
-（1）管理和使用非常容易。加载或卸载组件，只要添加或删除一行代码就可以了。
+（1）有利于代码复用。组件是模块化编程思想的体现，可以跨平台、跨框架使用，构建、部署和与其他 UI 元素互动都有统一做法。
+
+（2）使用非常容易。加载或卸载组件，只要添加或删除一行代码就可以了。
 
 ```html
 <link rel="import" href="my-dialog.htm">
 <my-dialog heading="A Dialog">Lorem ipsum</my-dialog>
 ```
 
-上面代码加载了一个对话框组件。
+上面代码中，第一行加载了一个对话框组件，第二行在网页上放置这个组件的实例。
 
-（2）定制非常容易。组件往往留出接口，供使用者设置常见属性，比如上面代码的heading属性，就是用来设置对话框的标题。
+（3）开发和定制很方便。组件开发不需要使用框架，只要用原生的语法就可以了。开发好的组件往往留出接口，供使用者设置常见属性，比如上面代码的`heading`属性，就是用来设置对话框的标题。
 
-（3）组件是模块化编程思想的体现，非常有利于代码的重用。标准格式的模块，可以跨平台、跨框架使用，构建、部署和与其他UI元素互动都有统一做法。
+（4）组件提供了 HTML、CSS、JavaScript 封装的方法，实现了与同一页面上其他代码的隔离。
 
-（4）组件提供了HTML、CSS、JavaScript封装的方法，实现了与同一页面上其他代码的隔离。
+未来的网站开发，可以像搭积木一样，把组件合在一起，就组成了一个网站。这种前景是非常诱人的。
 
-未来的网站开发，可以像搭积木一样，把组件合在一起，就组成了一个网站。这是非常诱人的。
+Web Components 不是单一的规范，而是一系列的技术组成，以下是它的四个构成。
 
-Web Components 不是单一的规范，而是一系列的技术组成，包括Template、Custom Element、Shadow DOM、HTML Import四种技术规范。使用时，并不一定这四者都要用到。其中，Custom Element和Shadow DOM最重要，Template和HTML Import只起到辅助作用。
+- Custom Elements
+- Template
+- Shadow DOM
+- HTML Import
 
-## `<template>`标签
-
-### 基本用法
-
-`<template>`标签表示组件的 HTML 代码模板。
-
-```html
-<template>
-  <h1>This won't display!</h1>
-  <script>alert("this won't alert!");</script>
-</template>
-```
-
-`<template>`内部就是正常的 HTML 代码，浏览器不会将这些代码加入 DOM。
-
-下面的代码会将模板内部的代码插入 DOM。
-
-```javascript
-let template = document.querySelector('template');
-document.body.appendChild(template.content);
-```
-
-注意，模板内部的代码只能插入一次，如果第二次执行上面的代码就会报错。
-
-如果需要多次插入模板，可以复制`<template>`内部代码，然后再插入。
-
-```javascript
-document.body.appendChild(template.content.cloneNode(true));
-```
-
-上面代码中，`cloneNode()`方法的参数`true`表示复制包含所有子节点。
-
-接受`<template>`插入的元素，叫做宿主元素（host）。在`<template>`之中，可以对宿主元素设置样式。
-
-```html
-<template>
-<style>
-  :host {
-    background: #f8f8f8;
-  }
-  :host(:hover) {
-    background: #ccc;
-  }
-</style>
-</template>
-```
-
-### document.importNode()
-
-document.importNode方法用于克隆外部文档的DOM节点。
-
-```javascript
-var iframe = document.getElementsByTagName("iframe")[0];
-var oldNode = iframe.contentWindow.document.getElementById("myNode");
-var newNode = document.importNode(oldNode, true);
-document.getElementById("container").appendChild(newNode);
-```
-
-上面例子是将iframe窗口之中的节点oldNode，克隆进入当前文档。
-
-注意，克隆节点之后，还必须用appendChild方法将其加入当前文档，否则不会显示。换个角度说，这意味着插入外部文档节点之前，必须用document.importNode方法先将这个节点准备好。
-
-document.importNode方法接受两个参数，第一个参数是外部文档的DOM节点，第二个参数是一个布尔值，表示是否连同子节点一起克隆，默认为false。大多数情况下，必须显式地将第二个参数设为true。
+使用时，并不一定上面四种 API 都要用到。其中，Custom Element 和 Shadow DOM 比较重要，Template 和 HTML Import 只起到辅助作用。
 
 ## Custom Element
 
-HTML 预定义的网页元素，有时并不符合我们的需要，这时可以自定义网页元素，这就叫做 Custom Element。它是 Web component 技术的核心。举例来说，你可以自定义一个叫做`<super-button>`的网页元素。
+HTML 预定义的网页元素，有时并不符合我们的需要，这时可以自定义网页元素，这就叫做 Custom Element。简单说，它就是用户自定义的网页元素，是 Web components 技术的核心。
+
+举例来说，你可以自定义一个叫做`<super-button>`的网页元素。
 
 ```html
-<super-button></super-button>
+<my-element></my-element>
 ```
 
-注意，自定义网页元素的标签名必须含有连字符`-`，一个或多个都可。这是因为浏览器内置的的 HTML 元素标签名，都不含有连字符，这样可以做到有效区分。
+注意，自定义网页元素的标签名必须含有连字符`-`，一个或多个连字符都可以。这是因为浏览器内置的的 HTML 元素标签名，都不含有连字符，这样可以做到有效区分。
 
 下面的代码先定义一个自定义元素的类。
 
@@ -105,19 +50,20 @@ HTML 预定义的网页元素，有时并不符合我们的需要，这时可以
 class MyElement extends HTMLElement {}
 ```
 
-然后，需要登记一下自定义元素与这个类之间的映射。
+然后，`window.customElements.define()`方法，用来登记自定义元素与这个类之间的映射。
 
 ```javascript
-customElements.define('my-element', MyElement);
+window.customElements.define('my-element', MyElement);
 ```
 
-登记以后，页面上的每一个`<my-element>`元素都是一个`MyElement`的实例。只要浏览器解析到`<my-element>`元素，就会运行`MyElement`的构造函数。
+登记以后，页面上的每一个`<my-element>`元素都是一个`MyElement`类的实例。只要浏览器解析到`<my-element>`元素，就会运行`MyElement`的构造函数。
 
-自定义元素的类有一些自定义的生命周期方法。
+自定义元素的类（`MyElement`）有一些自定义的生命周期方法。
 
-- `connectedCallback()`：自定义元素添加到页面时调用。这可能不止一次发生，比如元素被移除并重新添加。
-- `disconnectedCallback()`：自定义元素移除出页面时调用。
-- `attributeChangeCallback()`：修改白名单里面的自定义元素属性时触发。
+- `connectedCallback()`：自定义元素添加到页面（进入 DOM 树）时调用。这可能不止一次发生，比如元素被移除后又重新添加。类的设置应该尽量放到这个方法里面执行，因为这时各种属性和子元素都可用。
+- `disconnectedCallback()`：自定义元素移出 DOM 时执行。
+- `adoptedCallback()`：`document.adoptNode(element)`时执行。
+- `attributeChangeCallback()`：加入`observedAttributes`白名单的属性发生属性值变化时触发。
 
 下面是一个例子。
 
@@ -153,6 +99,25 @@ customElements.define('hey-there', GreetingElement);
 <hey-there name="Potch">Personalized Greeting</hey-there>
 ```
 
+生命周期方法调用的顺序如下：`constructor` -> `attributeChangedCallback` -> `connectedCallback`。
+
+```javascript
+class MyElement extends HTMLElement {
+  constructor() {
+    this.container = this.shadowRoot.querySelector('#container');
+  }
+  attributeChangedCallback(attr, oldVal, newVal) {
+    if(attr === 'disabled') {
+      if(this.hasAttribute('disabled') {
+        this.container.style.background = '#808080';
+      } else {
+        this.container.style.background = '#ffffff';
+      }
+    }
+  }
+}
+```
+
 如果你想扩展现有的 HTML 元素（比如`<button>`）也是可以的。
 
 ```javascript
@@ -171,9 +136,21 @@ customElements.define('hey-there', GreetingElement, { extends: 'button' });
 <button is="hey-there" name="World">Howdy</button>
 ```
 
+除了直接插入网页，使用脚本插入网页也是可以的。
+
+```javascript
+window.customElements.define(
+  'my-element',
+  class extends HTMLElement {...}
+);
+const el = window.customElements.get('my-element');
+const myElement = new el();  // same as document.createElement('my-element');
+document.body.appendChild(myElement);
+```
+
 ### document.registerElement()
 
-使用自定义元素前，必须用document对象的registerElement方法登记该元素。该方法返回一个自定义元素的构造函数。
+使用自定义元素前，必须用`document.registerElement()`方法登记该元素。该方法返回一个自定义元素的构造函数。
 
 ```javascript
 var SuperButton = document.registerElement('super-button');
@@ -340,6 +317,70 @@ var XFoo = document.registerElement('x-foo-with-markup',
 </x-foo-with-markup>
 
 ```
+
+## `<template>`标签
+
+### 基本用法
+
+`<template>`标签表示组件的 HTML 代码模板。
+
+```html
+<template>
+  <h1>This won't display!</h1>
+  <script>alert("this won't alert!");</script>
+</template>
+```
+
+`<template>`内部就是正常的 HTML 代码，浏览器不会将这些代码加入 DOM。
+
+下面的代码会将模板内部的代码插入 DOM。
+
+```javascript
+let template = document.querySelector('template');
+document.body.appendChild(template.content);
+```
+
+注意，模板内部的代码只能插入一次，如果第二次执行上面的代码就会报错。
+
+如果需要多次插入模板，可以复制`<template>`内部代码，然后再插入。
+
+```javascript
+document.body.appendChild(template.content.cloneNode(true));
+```
+
+上面代码中，`cloneNode()`方法的参数`true`表示复制包含所有子节点。
+
+接受`<template>`插入的元素，叫做宿主元素（host）。在`<template>`之中，可以对宿主元素设置样式。
+
+```html
+<template>
+<style>
+  :host {
+    background: #f8f8f8;
+  }
+  :host(:hover) {
+    background: #ccc;
+  }
+</style>
+</template>
+```
+
+### document.importNode()
+
+document.importNode方法用于克隆外部文档的DOM节点。
+
+```javascript
+var iframe = document.getElementsByTagName("iframe")[0];
+var oldNode = iframe.contentWindow.document.getElementById("myNode");
+var newNode = document.importNode(oldNode, true);
+document.getElementById("container").appendChild(newNode);
+```
+
+上面例子是将iframe窗口之中的节点oldNode，克隆进入当前文档。
+
+注意，克隆节点之后，还必须用appendChild方法将其加入当前文档，否则不会显示。换个角度说，这意味着插入外部文档节点之前，必须用document.importNode方法先将这个节点准备好。
+
+document.importNode方法接受两个参数，第一个参数是外部文档的DOM节点，第二个参数是一个布尔值，表示是否连同子节点一起克隆，默认为false。大多数情况下，必须显式地将第二个参数设为true。
 
 ## Shadow DOM
 
@@ -799,4 +840,5 @@ template标签定义了网页元素的模板。
 - Eric Bidelman, [HTML Imports](http://www.html5rocks.com/en/tutorials/webcomponents/imports/)
 - TJ VanToll, [Why Web Components Are Ready For Production](http://developer.telerik.com/featured/web-components-ready-production/)
 - Chris Bateman, [A No-Nonsense Guide to Web Components, Part 1: The Specs](http://cbateman.com/blog/a-no-nonsense-guide-to-web-components-part-1-the-specs/)
+- [Web Components will replace your frontend framework](https://blog.usejournal.com/web-components-will-replace-your-frontend-framework-3b17a580831c), Danny Moerkerke
 
