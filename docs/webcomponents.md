@@ -10,13 +10,6 @@
 
 （2）使用非常容易。加载或卸载组件，只要添加或删除一行代码就可以了。
 
-```html
-<link rel="import" href="my-dialog.htm">
-<my-dialog heading="A Dialog">Lorem ipsum</my-dialog>
-```
-
-上面代码中，第一行加载了一个对话框组件，第二行在网页上放置这个组件的实例。
-
 （3）开发和定制很方便。组件开发不需要使用框架，只要用原生的语法就可以了。开发好的组件往往留出接口，供使用者设置常见属性，比如上面代码的`heading`属性，就是用来设置对话框的标题。
 
 （4）组件提供了 HTML、CSS、JavaScript 封装的方法，实现了与同一页面上其他代码的隔离。
@@ -34,7 +27,9 @@ Web Components 不是单一的规范，而是一系列的技术组成，以下�
 
 ## Custom Element
 
-HTML 预定义的网页元素，有时并不符合我们的需要，这时可以自定义网页元素，这就叫做 Custom Element。简单说，它就是用户自定义的网页元素，是 Web components 技术的核心。
+### 简介
+
+HTML 标准定义的网页元素，有时并不符合我们的需要，这时浏览器允许用户自定义网页元素，这就叫做 Custom Element。简单说，它就是用户自定义的网页元素，是 Web components 技术的核心。
 
 举例来说，你可以自定义一个叫做`<super-button>`的网页元素。
 
@@ -58,7 +53,34 @@ window.customElements.define('my-element', MyElement);
 
 登记以后，页面上的每一个`<my-element>`元素都是一个`MyElement`类的实例。只要浏览器解析到`<my-element>`元素，就会运行`MyElement`的构造函数。
 
-自定义元素的类（`MyElement`）有一些自定义的生命周期方法。
+`window.customElements.define()`方法定义了 Custom Element 以后，可以使用`window.customeElements.get()`方法获取该元素的构造方法。
+
+```javascript
+const el = window.customElements.get('my-element');
+
+// same as myElement = document.createElement('my-element');
+const myElement = new el(); 
+
+document.body.appendChild(myElement);
+```
+
+### 生命周期方法
+
+Custom Element 有一些生命周期方法。
+
+```javascript
+class MyElement extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    // here the element has been inserted into the DOM
+  }
+}
+```
+
+上面代码中，`connectedCallback()`方法就是`MyElement`元素的生命周期方法。每次，该元素插入 DOM，就会自动执行该方法。
 
 - `connectedCallback()`：自定义元素添加到页面（进入 DOM 树）时调用。这可能不止一次发生，比如元素被移除后又重新添加。类的设置应该尽量放到这个方法里面执行，因为这时各种属性和子元素都可用。
 - `disconnectedCallback()`：自定义元素移出 DOM 时执行。
