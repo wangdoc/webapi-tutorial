@@ -53,15 +53,36 @@ window.customElements.define('my-element', MyElement);
 
 登记以后，页面上的每一个`<my-element>`元素都是一个`MyElement`类的实例。只要浏览器解析到`<my-element>`元素，就会运行`MyElement`的构造函数。
 
-`window.customElements.define()`方法定义了 Custom Element 以后，可以使用`window.customeElements.get()`方法获取该元素的构造方法。
+注意，如果没有登记就使用 Custom Element，浏览器会认为这是一个不认识的元素，会当做空的 div 元素处理。
+
+`window.customElements.define()`方法定义了 Custom Element 以后，可以使用`window.customeElements.get()`方法获取该元素的构造方法。这使得除了直接插入 HTML 网页，Custom Element 也能使用脚本插入网页。
 
 ```javascript
+window.customElements.define(
+  'my-element',
+  class extends HTMLElement {...}
+);
 const el = window.customElements.get('my-element');
-
-// same as myElement = document.createElement('my-element');
-const myElement = new el(); 
-
+const myElement = new el();
 document.body.appendChild(myElement);
+```
+
+如果你想扩展现有的 HTML 元素（比如`<button>`）也是可以的。
+
+```javascript
+class GreetingElement extends HTMLButtonElement
+```
+
+登记的时候，需要提供扩展的元素。
+
+```javascript
+customElements.define('hey-there', GreetingElement, { extends: 'button' });
+```
+
+使用的时候，为元素加上`is`属性就可以了。
+
+```html
+<button is="hey-there" name="World">Howdy</button>
 ```
 
 ### 生命周期方法
@@ -112,7 +133,7 @@ GreetingElement.observedAttributes = ['name'];
 customElements.define('hey-there', GreetingElement);
 ```
 
-上面代码中，`GreetingElement.observedAttributes`属性用来指定白名单里面的属性。
+上面代码中，`GreetingElement.observedAttributes`属性用来指定白名单里面的属性，上例是`name`属性。只要这个属性的值发生变化，就会自动调用`attributeChangedCallback`方法。
 
 使用上面这个类的方法如下。
 
@@ -121,7 +142,11 @@ customElements.define('hey-there', GreetingElement);
 <hey-there name="Potch">Personalized Greeting</hey-there>
 ```
 
-生命周期方法调用的顺序如下：`constructor` -> `attributeChangedCallback` -> `connectedCallback`。
+`attributeChangedCallback`方法主要用于外部传入的属性，就像上面例子中`name="Potch"`。
+
+生命周期方法调用的顺序如下：`constructor` -> `attributeChangedCallback` -> `connectedCallback`，即`attributeChangedCallback`早于`connectedCallback`执行。这是因为`attributeChangedCallback`相当于调整配置，应该在插入 DOM 之前完成。
+
+下面的例子能够更明显地看出这一点，在插入 DOM 前修改 Custome Element 的颜色。
 
 ```javascript
 class MyElement extends HTMLElement {
@@ -140,153 +165,95 @@ class MyElement extends HTMLElement {
 }
 ```
 
-如果你想扩展现有的 HTML 元素（比如`<button>`）也是可以的。
+### 自定义属性和方法
+
+Custom Element 允许自定义属性或方法。
 
 ```javascript
-class GreetingElement extends HTMLButtonElement
-```
+class MyElement extends HTMLElement {
+  ...
 
-登记的时候，需要提供扩展的元素。
-
-```javascript
-customElements.define('hey-there', GreetingElement, { extends: 'button' });
-```
-
-使用的时候，为元素加上`is`属性就可以了。
-
-```html
-<button is="hey-there" name="World">Howdy</button>
-```
-
-除了直接插入网页，使用脚本插入网页也是可以的。
-
-```javascript
-window.customElements.define(
-  'my-element',
-  class extends HTMLElement {...}
-);
-const el = window.customElements.get('my-element');
-const myElement = new el();  // same as document.createElement('my-element');
-document.body.appendChild(myElement);
-```
-
-### document.registerElement()
-
-使用自定义元素前，必须用`document.registerElement()`方法登记该元素。该方法返回一个自定义元素的构造函数。
-
-```javascript
-var SuperButton = document.registerElement('super-button');
-document.body.appendChild(new SuperButton());
-```
-
-上面代码生成自定义网页元素的构造函数，然后通过构造函数生成一个实例，将其插入网页。
-
-可以看到，document.registerElement方法的第一个参数是一个字符串，表示自定义的网页元素标签名。该方法还可以接受第二个参数，表示自定义网页元素的原型对象。
-
-```javascript
-
-var MyElement = document.registerElement('user-profile', {
-  prototype: Object.create(HTMLElement.prototype)
-});
-
-```
-
-上面代码注册了自定义元素user-profile。第二个参数指定该元素的原型为HTMLElement.prototype（浏览器内部所有Element节点的原型）。
-
-但是，如果写成上面这样，自定义网页元素就跟普通元素没有太大区别。自定义元素的真正优势在于，可以自定义它的API。
-
-```javascript
-var buttonProto = Object.create(HTMLElement.prototype);
-
-buttonProto.print = function() {
-  console.log('Super Button!');
+  doSomething() {
+    // do something in this method
+  }
 }
-
-var SuperButton = document.registerElement('super-button', {
-  prototype: buttonProto
-});
-
-var supperButton = document.querySelector('super-button');
-
-supperButton.print();
 ```
 
-上面代码在原型对象上定义了一个print方法，然后将其指定为super-button元素的原型。因此，所有supper-button实例都可以调用print这个方法。
-
-如果想让自定义元素继承某种特定的网页元素，就要指定extends属性。比如，想让自定义元素继承h1元素，需要写成下面这样。
+上面代码中，`doSomething()`就是`MyElement`的自定义方法，使用方法如下。
 
 ```javascript
-var MyElement = document.registerElement('another-heading', {
-  prototype: Object.create(HTMLElement.prototype),
-  extends: 'h1'
-});
+const element = document.querySelector('my-element');
+element.doSomething();
 ```
 
-另一个是自定义按钮（button）元素的例子。
+自定义属性可以使用 JavaScript class 的所有语法，因此也可以设置取值器和赋值器。
 
 ```javascript
-var MyButton = document.registerElement('super-button', {
-  prototype: Object.create(HTMLButtonElement.prototype),
-  extends: 'button'
-});
+class MyElement extends HTMLElement {
+  ...
+
+  set disabled(isDisabled) {
+    if(isDisabled) {
+      this.setAttribute('disabled', '');
+    }
+    else {
+      this.removeAttribute('disabled');
+    }
+  }
+
+  get disabled() {
+    return this.hasAttribute('disabled');
+  }
+}
 ```
 
-如果要继承一个自定义元素（比如`x-foo-extended`继承`x-foo`），也是采用extends属性。
+上面代码中的取值器和赋值器，可用于`<my-input name="name" disabled>`这样的用法。
+
+### window.customElements.whenDefined()
+
+`window.customElements.whenDefined()`方法在一个 Custom Element 被`customElements.define()`方法定义以后执行，用于“升级”一个元素。
 
 ```javascript
-var XFooExtended = document.registerElement('x-foo-extended', {
-  prototype: Object.create(HTMLElement.prototype),
-  extends: 'x-foo'
-});
+window.customElements.whenDefined('my-element')
+.then(() => {
+  // my-element is now defined
+})
 ```
 
-定义了自定义元素以后，使用的时候，有两种方法。一种是直接使用，另一种是间接使用，指定为某个现有元素是自定义元素的实例。
-
-```html
-<!-- 直接使用 -->
-<supper-button></supper-button>
-
-<!-- 间接使用 -->
-<button is="supper-button"></button>
-```
-
-总之，如果A元素继承了B元素。那么，B元素的is属性，可以指定B元素是A元素的一个实例。
-
-### 添加属性和方法
-
-自定义元素的强大之处，就是可以在它上面定义新的属性和方法。
+如果某个属性值发生变化时，需要做出反应，可以将它放入`observedAttributes`数组。
 
 ```javascript
-var XFooProto = Object.create(HTMLElement.prototype);
-var XFoo = document.registerElement('x-foo', {prototype: XFooProto});
-```
+class MyElement extends HTMLElement {
+  static get observedAttributes() {
+    return ['disabled'];
+  }
 
-上面代码注册了一个x-foo标签，并且指明原型继承HTMLElement.prototype。现在，我们就可以在原型上面，添加新的属性和方法。
+  constructor() {
+    const shadowRoot = this.attachShadow({mode: 'open'});
+    shadowRoot.innerHTML = `
+      <style>
+        .disabled {
+          opacity: 0.4;
+        }
+      </style>
 
-```javascript
+      <div id="container"></div>
+    `;
 
-// 添加属性
-Object.defineProperty(XFooProto, "bar", {value: 5});
+    this.container = this.shadowRoot('#container');
+  }
 
-// 添加方法
-XFooProto.foo = function() {
-  console.log('foo() called');
-};
-
-// 另一种写法
-var XFoo = document.registerElement('x-foo', {
-  prototype: Object.create(HTMLElement.prototype, {
-    bar: {
-      get: function() { return 5; }
-    },
-    foo: {
-      value: function() {
-        console.log('foo() called');
+  attributeChangedCallback(attr, oldVal, newVal) {
+    if(attr === 'disabled') {
+      if(this.disabled) {
+        this.container.classList.add('disabled');
+      }
+      else {
+        this.container.classList.remove('disabled')
       }
     }
-  })
-});
-
+  }
+}
 ```
 
 ### 回调函数
@@ -333,11 +300,45 @@ var XFoo = document.registerElement('x-foo-with-markup',
 上面代码定义了createdCallback回调函数，生成实例时，该函数运行，插入如下的HTML语句。
 
 ```html
-
 <x-foo-with-markup>
    <b>I'm an x-foo-with-markup!</b>
 </x-foo-with-markup>
+```
 
+### Custom Element 的子元素
+
+用户使用 Custom Element 时候，可以在内部放置子元素。Custom Element 提供`<slot>`用来引用内部内容。
+
+下面的`<image-gallery>`是一个 Custom Element。用户在里面放置了子元素。
+
+```html
+<image-gallery>
+  <img src="foo.jpg" slot="image">
+  <img src="bar.jpg" slot="image">
+</image-gallery>
+```
+
+`<image-gallery>`内部的模板如下。
+
+```html
+<div id="container">
+  <div class="images">
+    <slot name="image"></slot>
+  </div>
+</div>
+```
+
+最终合成的代码如下。
+
+```html
+<div id="container">
+  <div class="images">
+    <slot name="image">
+      <img src="foo.jpg" slot="image">
+      <img src="bar.jpg" slot="image">
+    </slot>
+  </div>
+</div>
 ```
 
 ## `<template>`标签
@@ -406,7 +407,11 @@ document.importNode方法接受两个参数，第一个参数是外部文档的D
 
 ## Shadow DOM
 
-所谓 Shadow DOM 指的是，浏览器将模板、样式表、属性、JavaScript 码等，封装成一个独立的 DOM 元素。外部的设置无法影响到其内部，而内部的设置也不会影响到外部，与浏览器处理原生网页元素（比如`<video>`元素）的方式很像。Shadow DOM 最大的好处有两个，一是可以向用户隐藏细节，直接提供组件，二是可以封装内部样式表，不会影响到外部。
+所谓 Shadow DOM 指的是，浏览器将模板、样式表、属性、JavaScript 码等，封装成一个独立的 DOM 元素。外部的设置无法影响到其内部，而内部的设置也不会影响到外部，与浏览器处理原生网页元素（比如`<video>`元素）的方式很像。
+
+Shadow DOM 最大的好处有两个，一是可以向用户隐藏细节，直接提供组件，二是可以封装内部样式表，不会影响到外部。
+
+Custom Element 内部有一个 Shadow Root。它就是接入外部 DOM 的根元素。
 
 ```javascript
 // attachShadow() creates a shadow root.
@@ -421,12 +426,17 @@ div.querySelector('b'); // empty
 
 上面代码中，`<div>`包含`<b>`，但是 DOM 方法无法看到它，而且页面的样式也影响不到它。
 
+`mode: 'open'`表示开发者工具里面，可以看到 Custom HTML 内部的 DOM，并与之互动。`mode: closed`将不允许 Custom Element 的使用者与内部代码互动。
+
+Shadow root 内部通过指定`innerHTML`属性或使用`<template>`元素，指定 HTML 代码。
+
 Shadow DOM 内部可以通过向根添加`<style>`（或`<link>`）来设置样式。
 
 ```javascript
 let style = document.createElement('style');
 style.innerText = 'b { font-weight: bolder; color: red; }';
 shadowRoot.appendChild(style);
+
 let inner = document.createElement('b');
 inner.innerHTML = "I'm bolder in the shadows";
 shadowRoot.appendChild(inner);
@@ -434,37 +444,47 @@ shadowRoot.appendChild(inner);
 
 上面代码添加的样式，只会影响 Shadow DOM 内的元素。
 
-Shadow DOM元素必须依存在一个现有的DOM元素之下，通过`createShadowRoot`方法创造，然后将其插入该元素。
+Custom Element 的 CSS 样式内部，`:root`表示这个根元素。比如，Custom Element 默认是行内元素，下面代码可以改成块级元素。
 
-```javascript
-var shadowRoot = element.createShadowRoot();
-document.body.appendChild(shadowRoot);
+```css
+:host {
+  display: block;
+}
+
+:host([disabled]) {
+  opacity: 0.5;
+}
 ```
 
-上面代码创造了一个`shadowRoot`元素，然后将其插入HTML文档。
+注意，外部样式会覆盖掉`:host`的设置，比如下面的样式会覆盖`:host`。
 
-下面的例子是指定网页中某个现存的元素，作为Shadow DOM的根元素。
-
-```html
-<button>Hello, world!</button>
-<script>
-  var host = document.querySelector('button');
-  var root = host.createShadowRoot();
-  root.textContent = '你好';
-</script>
+```css
+my-element {
+  display: inline-block;
+}
 ```
 
-上面代码指定现存的`button`元素，为Shadow DOM的根元素，并将`button`的文字从英文改为中文。
+利用 CSS 的自定义属性，可以为 Custom Element 可以被覆盖的默认样式。下面是外部样式，`my-element`是 Custom Element。
 
-通过innerHTML属性，可以为Shadow DOM指定内容。
-
-```javascript
-var shadow = document.querySelector('#hostElement').createShadowRoot();
-shadow.innerHTML = '<p>Here is some new text</p>';
-shadow.innerHTML += '<style>p { color: red };</style>';
+```css
+my-element {
+  --background-color: #ff0000;
+}
 ```
 
-下面的例子是为Shadow DOM加上独立的模板。
+然后，内部可以指定默认样式，用于用户没有指定颜色的情况。
+
+```css
+:host {
+  --background-color: #ffffff;
+}
+
+#container {
+  background-color: var(--background-color);
+}
+```
+
+下面的例子是为 Shadow DOM 加上独立的模板。
 
 ```html
 <div id="nameTag">张三</div>
@@ -488,14 +508,6 @@ shadow.innerHTML += '<style>p { color: red };</style>';
 ```
 
 上面代码是一个`div`元素和模板。接下来，就是要把模板应用到`div`元素上。
-
-```javascript
-var shadow = document.querySelector('#nameTag').createShadowRoot();
-var template = document.querySelector('#nameTagTemplate');
-shadow.appendChild(template.content.cloneNode(true));
-```
-
-上面代码先用`createShadowRoot`方法，对`div`创造一个根元素，用来指定Shadow DOM，然后把模板元素添加为`Shadow`的子元素。
 
 ## HTML Import
 
