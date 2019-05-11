@@ -10,11 +10,9 @@
 
 [IntersectionObserver API](https://wicg.github.io/IntersectionObserver/)，可以自动“观察”元素是否可见，Chrome 51+ 已经支持。由于可见（visible）的本质是，目标元素与视口产生一个交叉区，所以这个 API 叫做“交叉观察器”（intersection oberserver）。
 
-注意，IntersectionObserver API 是异步的，不随着目标元素的滚动同步触发。规格写明，`IntersectionObserver`的实现，应该采用`requestIdleCallback()`，即只有线程空闲下来，才会执行观察器。这意味着，这个观察器的优先级非常低，只在其他任务执行完，浏览器有了空闲才会执行。
+## 简介
 
-## API
-
-IntersectionObserver 的 API 只有两行。
+IntersectionObserver API 的用法，简单来说就是两行。
 
 ```javascript
 var observer = new IntersectionObserver(callback, options);
@@ -43,7 +41,13 @@ observer.observe(elementA);
 observer.observe(elementB);
 ```
 
-## callback 参数
+注意，IntersectionObserver API 是异步的，不随着目标元素的滚动同步触发。规格写明，`IntersectionObserver`的实现，应该采用`requestIdleCallback()`，即只有线程空闲下来，才会执行观察器。这意味着，这个观察器的优先级非常低，只在其他任务执行完，浏览器有了空闲才会执行。
+
+## IntersectionObserver.observe()
+
+`IntersectionObserver.observe()`方法用来启动对一个 DOM 元素的观察。该方法接受两个参数：回调函数`callback`和配置对象`options`。
+
+### callback 参数
 
 目标元素的可见性变化时，就会调用观察器的回调函数`callback`。
 
@@ -59,7 +63,7 @@ var observer = new IntersectionObserver(
 
 上面代码中，回调函数采用的是[箭头函数](http://es6.ruanyifeng.com/#docs/function#箭头函数)的写法。`callback`函数的参数（`entries`）是一个数组，每个成员都是一个[`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)对象（详见下文）。举例来说，如果同时有两个被观察的对象的可见性发生变化，`entries`数组就会有两个成员。
 
-## IntersectionObserverEntry 对象
+### IntersectionObserverEntry 对象
 
 `IntersectionObserverEntry`对象提供目标元素的信息，一共有六个属性。
 
@@ -100,11 +104,11 @@ var observer = new IntersectionObserver(
 
 我写了一个 [Demo](http://jsbin.com/canuze/edit?js,console,output)，演示`IntersectionObserverEntry`对象。注意，这个 Demo 只能在 Chrome 51+ 运行。
 
-## Option 对象
+### Option 对象
 
 `IntersectionObserver`构造函数的第二个参数是一个配置对象。它可以设置以下属性。
 
-### threshold 属性
+**（1）threshold 属性**
 
 `threshold`属性决定了什么时候触发回调函数，即元素进入视口（或者容器元素）多少比例时，执行回调函数。它是一个数组，每个成员都是一个门槛值，默认为`[0]`，即交叉比例（`intersectionRatio`）达到`0`时触发回调函数。
 
@@ -123,7 +127,7 @@ new IntersectionObserver(
 
 ![](http://www.ruanyifeng.com/blogimg/asset/2016/bg2016110202.gif)
 
-### root 属性，rootMargin 属性
+**（2）root 属性，rootMargin 属性**
 
 `IntersectionObserver`不仅可以观察元素相对于视口的可见性，还可以观察元素相对于其所在容器的可见性。容器内滚动也会影响目标元素的可见性，参见本文开始时的那张示意图。
 
