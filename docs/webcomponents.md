@@ -31,7 +31,7 @@ Web Components 不是单一的规范，而是一系列的技术组成，以下�
 
 HTML 标准定义的网页元素，有时并不符合我们的需要，这时浏览器允许用户自定义网页元素，这就叫做 Custom Element。简单说，它就是用户自定义的网页元素，是 Web components 技术的核心。
 
-举例来说，你可以自定义一个叫做`<super-button>`的网页元素。
+举例来说，你可以自定义一个叫做`<my-element>`的网页元素。
 
 ```html
 <my-element></my-element>
@@ -42,8 +42,41 @@ HTML 标准定义的网页元素，有时并不符合我们的需要，这时浏
 下面的代码先定义一个自定义元素的类。
 
 ```javascript
-class MyElement extends HTMLElement {}
+class MyElement extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow( { mode: 'open' } );
+    this.shadowRoot.innerHTML = `
+      <style>
+        /* scoped styles */
+      </style>
+      <slot></slot>
+    `;
+  }
+
+  static get observedAttributes() {
+    // Return list of attributes to watch.
+  }
+
+  attributeChangedCallback( name, oldValue, newValue ) {
+    // Run functionality when one of these attributes is changed.
+  }
+
+  connectedCallback() {
+    // Run functionality when an instance of this element is inserted into the DOM.
+  }
+
+  disconnectedCallback() {
+    // Run functionality when an instance of this element is removed from the DOM.
+  }
+}
 ```
+
+上面代码有几个注意点。
+
+- 自定义元素类的基类是`HTMLElement`。当然也可以根据需要，基于`HTMLElement`的子类，比如`HTMLButtonElement`。
+- 构造函数内部定义了 Shadow DOM。所谓`Shadow DOM`指的是，这部分的 HTML 代码和样式，不直接暴露给用户。
+- 类可以定义生命周期方法，比如`connectedCallback()`。
 
 然后，`window.customElements.define()`方法，用来登记自定义元素与这个类之间的映射。
 
@@ -87,7 +120,7 @@ customElements.define('hey-there', GreetingElement, { extends: 'button' });
 
 ### 生命周期方法
 
-Custom Element 有一些生命周期方法。
+Custom Element 提供一些生命周期方法。
 
 ```javascript
 class MyElement extends HTMLElement {
@@ -103,10 +136,10 @@ class MyElement extends HTMLElement {
 
 上面代码中，`connectedCallback()`方法就是`MyElement`元素的生命周期方法。每次，该元素插入 DOM，就会自动执行该方法。
 
-- `connectedCallback()`：自定义元素添加到页面（进入 DOM 树）时调用。这可能不止一次发生，比如元素被移除后又重新添加。类的设置应该尽量放到这个方法里面执行，因为这时各种属性和子元素都可用。
-- `disconnectedCallback()`：自定义元素移出 DOM 时执行。
-- `adoptedCallback()`：`document.adoptNode(element)`时执行。
-- `attributeChangeCallback()`：加入`observedAttributes`白名单的属性发生属性值变化时触发。
+- `connectedCallback()`：插入 DOM 时调用。这可能不止一次发生，比如元素被移除后又重新添加。类的设置应该尽量放到这个方法里面执行，因为这时各种属性和子元素都可用。
+- `disconnectedCallback()`：移出 DOM 时执行。
+- `attributeChangedCallback(attrName, oldVal, newVal)`：添加、删除、更新或替换属性时调用。元素创建或升级时，也会调用。注意：只有加入`observedAttributes`的属性才会执行这个方法。
+- `adoptedCallback()`：自定义元素移动到新的 document 时调用，比如执行`document.adoptNode(element)`时。
 
 下面是一个例子。
 
@@ -875,4 +908,4 @@ template标签定义了网页元素的模板。
 - TJ VanToll, [Why Web Components Are Ready For Production](http://developer.telerik.com/featured/web-components-ready-production/)
 - Chris Bateman, [A No-Nonsense Guide to Web Components, Part 1: The Specs](http://cbateman.com/blog/a-no-nonsense-guide-to-web-components-part-1-the-specs/)
 - [Web Components will replace your frontend framework](https://blog.usejournal.com/web-components-will-replace-your-frontend-framework-3b17a580831c), Danny Moerkerke
-
+- [Custom Elements v1: Reusable Web Components](https://developers.google.com/web/fundamentals/web-components/customelements#extend), Eric Bidelman
