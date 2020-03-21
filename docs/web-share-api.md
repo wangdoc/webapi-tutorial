@@ -2,7 +2,7 @@
 
 ## 概述
 
-网页内容如果要分享到其他应用，通常要自己实现分享接口，逐一给出目标应用的连接方式。这样很麻烦，也对网页性能有一定影响。Web Share API 就是为了解决这个问题而提出的，允许网页调用操作系统的分享接口。
+网页内容如果要分享到其他应用，通常要自己实现分享接口，逐一给出目标应用的连接方式。这样很麻烦，也对网页性能有一定影响。Web Share API 就是为了解决这个问题而提出的，允许网页调用操作系统的分享接口，实质是 Web App 与本机的应用程序交换信息的一种方式。
 
 这个 API 不仅可以改善网页性能，而且不限制分享目标的数量和类型。社交媒体应用、电子邮件、即时消息、以及本地系统安装的、且接受分享的应用，都会出现在系统的分享弹窗，这对手机网页尤其有用。另外，使用这个接口只需要一个分享按钮，而传统的网页分享有多个分享目标，就有多少个分享按钮。
 
@@ -73,8 +73,37 @@ shareButton.addEventListener('click', async () => {
 });
 ```
 
+## 分享文件
+
+这个 API 还可以分享文件，先使用`navigator.canShare()`方法，判断一下目标文件是否可以分享。因为不是所有文件都允许分享的，目前图像，视频，音频和文本文件可以分享2。
+
+```javascript
+if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+  // ...
+}
+```
+
+上面代码中，`navigator.canShare()`方法的参数对象，就是`navigator.share()`方法的参数对象。这里的关键是`files`属性，它的值是一个`FileList`实例对象。
+
+`navigator.canShare()`方法返回一个布尔值，如果为`true`，就可以使用`navigator.share()`方法分享文件了。
+
+```javascript
+if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+  navigator.share({
+    files: filesArray,
+    title: 'Vacation Pictures',
+    text: 'Photos from September 27 to October 14.',
+  })
+  .then(() => console.log('Share was successful.'))
+  .catch((error) => console.log('Sharing failed', error));
+}
+```
+
+
+
 ## 参考链接
 
 - [How to Use the Web Share API](https://css-tricks.com/how-to-use-the-web-share-api/), Ayooluwa Isaiah
 - [Web Share API - Level 1](https://wicg.github.io/web-share/), W3C
 - [Introducing the Web Share API](https://developers.google.com/web/updates/2016/09/navigator-share), Paul Kinlan, Sam Thorogood
+- [Share like a native app with the Web Share API](https://web.dev/web-share/), Joe Medley
