@@ -4,13 +4,32 @@ Web Audio API 用于操作声音。这个 API 可以让网页发出声音。
 
 ## 基本用法
 
-浏览器原生提供`AudioContext`对象，该对象用于生成一个声音的上下文。
+浏览器原生提供`AudioContext`对象，该对象用于生成一个声音的上下文，与扬声器相连。
 
 ```javascript
 const audioContext = new AudioContext();
 ```
 
-然后，`context.createBuffer()`方法生成一个内存的操作视图，用于存放数据。
+然后，获取音源文件，将其在内存中解码，就可以播放声音了。
+
+```javascript
+const context = new AudioContext();
+
+fetch('sound.mp4')
+  .then(response => response.arrayBuffer())
+  .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+  .then(audioBuffer => {
+    // 播放声音
+    const source = context.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(context.destination);
+    source.start();
+  });
+```
+
+## context.createBuffer()
+
+`context.createBuffer()`方法生成一个内存的操作视图，用于存放数据。
 
 ```javascript
 const buffer = audioContext.createBuffer(channels, signalLength, sampleRate);
