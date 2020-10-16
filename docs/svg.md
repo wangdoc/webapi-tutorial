@@ -18,7 +18,7 @@ SVG 文件可以直接插入网页，成为 DOM 的一部分，然后用 JavaScr
   preserveAspectRatio="xMidYMid meet"
 >
   <circle id="mycircle" cx="400" cy="300" r="50" />
-<svg>
+</svg>
 </body>
 </html>
 ```

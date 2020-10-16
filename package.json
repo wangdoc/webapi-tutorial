@@ -12,6 +12,11 @@
     "chapter": "loppo chapter",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm update"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/wangdoc/webapi-tutorial.git"
@@ -27,7 +32,7 @@
   "devDependencies": {},
   "dependencies": {
     "gh-pages": "latest",
-    "husky": "^0.14.3",
+    "husky": "^4.3.0",
     "loppo": "latest",
     "loppo-theme-wangdoc": "latest"
   }
