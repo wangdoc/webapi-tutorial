@@ -45,7 +45,7 @@ observer.observe(elementB);
 
 ## IntersectionObserver.observe()
 
-`IntersectionObserver.observe()`方法用来启动对一个 DOM 元素的观察。该方法接受两个参数：回调函数`callback`和配置对象`options`。
+IntersectionObserver 实例的`observe()`方法用来启动对一个 DOM 元素的观察。该方法接受两个参数：回调函数`callback`和配置对象`options`。
 
 ### callback 参数
 
