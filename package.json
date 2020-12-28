@@ -32,7 +32,7 @@
   "devDependencies": {},
   "dependencies": {
     "gh-pages": "latest",
-    "husky": "^4.3.0",
+    "husky": "^4.3.6",
     "loppo": "latest",
     "loppo-theme-wangdoc": "latest"
   }
