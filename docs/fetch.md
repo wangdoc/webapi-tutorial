@@ -2,7 +2,7 @@
 
 `fetch()`是 XMLHttpRequest 的升级版，用于在 JavaScript 脚本里面发出 HTTP 请求。
 
-浏览器原生提供这个对象。本文详细介绍它的用法。
+浏览器原生提供这个对象。本章详细介绍它的用法。
 
 ## 基本用法
 
@@ -51,7 +51,7 @@ async function getJSON() {
 
 后文都采用`await`的写法，不使用`.then()`的写法。
 
-## esponse 对象：处理 HTTP 回应
+## Response 对象：处理 HTTP 回应
 
 ### Response 对象的同步属性
 
