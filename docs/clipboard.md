@@ -2,6 +2,40 @@
 
 ## 简介
 
+虽然大多数时候，不应该改动用户的剪贴板，但是有些时候确实能够带来方便，比如“一键复制”功能，用户点击一下按钮，指定的内容就自动进入剪贴板。
+
+剪贴板操作一共有三种方法。
+
+## Document.execCommand() 方法
+
+`Document.execCommand()`方法是操作剪贴板的传统方法，一共提供了三个操作。
+
+- `document.execCommand('copy')`（复制）
+- `document.execCommand('cut')`（剪切）
+- `document.execCommand('paste')`（粘贴）
+
+复制时，只要选中文本，然后调用`document.execCommand('copy')`，数据就会进入剪贴板。
+
+```javascript
+const inputElement = document.querySelector('#input');
+inputElement.select();
+document.execCommand('copy');
+```
+
+上面示例中，选中输入框`inputElement`里面的文字，然后`document.execCommand('copy')`会将其复制到剪贴板。注意，复制操作最好由用户触发（比如点击按钮后触发），如果脚本自动执行，某些浏览器可能会报错。
+
+粘贴时，调用`document.execCommand('paste')`，就会将剪贴板里面的内容，输出到当前的焦点元素中。
+
+```javascript
+const pasteText = document.querySelector('#output');
+pasteText.focus();
+document.execCommand('paste');
+```
+
+`Document.execCommand()`方法虽然方便，但是有一些缺点。首先，它只能将选中的内容，复制到剪贴板，而且它是同步操作，复制/粘贴过程中，整个页面的脚本都会停下来；有些浏览器会提出提示框，要求用户许可，在用户做出选择前，页面会失去响应。异步剪贴板 API 更强大，可以指定放入剪贴板的数据。
+
+## 异步剪贴版 API
+
 Clipboard API 用于读写浏览器的剪贴板，取代传统的`document.execCommand()`方法。这个 API 的最大特点，就是所有操作都是异步的，返回 Promise 对象。
 
 通过`navigator.clipboard`属性，可以获取 Clipboard 对象，所有 API 都通过这个对象操作。
@@ -34,7 +68,7 @@ setTimeout(async () => {
 
 上面代码运行以后，快速点击一下页面窗口，使其变为当前页，这样就不会报错了。
 
-## 方法
+## Clipboard 对象
 
 Clipboard 对象提供了四个方法，用来读写剪贴板。它们都是异步方法，返回 Promise 对象。
 
@@ -163,7 +197,7 @@ function copy() {
 }
 ```
 
-## copy 事件
+## copy 事件，cut 事件
 
 用户向剪贴板放入数据时，将触发`copy`事件。
 
@@ -178,6 +212,13 @@ source.addEventListener('copy', (event) => {
   event.preventDefault();
 });
 ```
+
+上面示例中，`Event.clipboardData`属性指向一个对象，包含了剪贴板里面的数据。该对象有以下属性和方法。
+
+- `Event.clipboardData.setData(type, data)`：修改`Event.clipboardData`携带的数据，需要指定数据类型。
+- `Event.clipboardData..getData(type)`：获取`Event.clipboardData`携带的数据，需要指定数据类型。
+- `Event.clipboardData.clearData([type])`：清除`Event.clipboardData`携带的数据，如果不指定类型，将清除所有数据。
+- `Event.clipboardData.items`：一个类似数组的对象，包含了所有剪贴项，不过通常只有一个剪贴项。
 
 下面的示例是拦截用户的复制操作，将指定内容放入剪贴板。
 
@@ -208,6 +249,8 @@ document.addEventListener('copy', async (e) => {
 
 上面示例中，脚本接管了复制操作，所以要使用`e.preventDefault()`，先取消系统的默认操作。
 
+`cut`事件在用户进行剪切操作时触发，它的脚本处理跟`copy`事件完全一样，也是从`Event.clipboardData`属性拿到剪切的数据。
+
 ## paste 事件
 
 用户使用剪贴板数据，进行粘贴操作时，会触发`paste`事件。
@@ -225,4 +268,7 @@ document.addEventListener('paste', async (e) => {
 ## 参考链接
 
 - [Unblocking clipboard access](https://web.dev/async-clipboard/)
+- [Interact with the clipboard](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Interact_with_the_clipboard)
+- [Multi-MIME Type Copying with the Async Clipboard API](https://blog.tomayac.com/2020/03/20/multi-mime-type-copying-with-the-async-clipboard-api/)
+
 
