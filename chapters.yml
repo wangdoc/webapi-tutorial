@@ -1,4 +1,5 @@
 - canvas.md: Canvas API
+- clipboard.md: Clipboard API
 - fetch.md: Fetch API
 - fontface.md: FontFace API
 - geolocation.md: Geolocation API
