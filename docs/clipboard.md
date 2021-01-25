@@ -248,7 +248,7 @@ source.addEventListener('copy', (event) => {
 上面示例中，事件对象的`clipboardData`属性包含了剪贴板数据。它是一个对象，有以下属性和方法。
 
 - `Event.clipboardData.setData(type, data)`：修改剪贴板数据，需要指定数据类型。
-- `Event.clipboardData..getData(type)`：获取剪贴板数据，需要指定数据类型。
+- `Event.clipboardData.getData(type)`：获取剪贴板数据，需要指定数据类型。
 - `Event.clipboardData.clearData([type])`：清除剪贴板数据，可以指定数据类型。如果不指定类型，将清除所有类型的数据。
 - `Event.clipboardData.items`：一个类似数组的对象，包含了所有剪贴项，不过通常只有一个剪贴项。
 
