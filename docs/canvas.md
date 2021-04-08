@@ -791,7 +791,7 @@ function blobToImg(blob) {
   var newImg = document.createElement('img');
   var url = URL.createObjectURL(blob);
 
-  newImg.onload = functio () {
+  newImg.onload = function () {
     // 使用完毕，释放 URL 对象
     URL.revokeObjectURL(url);
   };
