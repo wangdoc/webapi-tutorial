@@ -315,9 +315,10 @@ var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 
 var text1 = ctx.measureText('Hello world');
-text.width // 49.46
+text1.width // 49.46
 
 ctx.font = 'Bold 20px Arial';
+var text2 = ctx.measureText('Hello world');
 text2.width // 107.78
 ```
 
@@ -790,7 +791,7 @@ function blobToImg(blob) {
   var newImg = document.createElement('img');
   var url = URL.createObjectURL(blob);
 
-  newImg.onload = functio () {
+  newImg.onload = function () {
     // 使用完毕，释放 URL 对象
     URL.revokeObjectURL(url);
   };
