@@ -489,7 +489,12 @@ fetch('http://another.com', {
 window.onunload = function() {
   fetch('/analytics', {
     method: 'POST',
-    body: "statistics",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      some: 'data'
+    }),
     keepalive: true
   });
 };
