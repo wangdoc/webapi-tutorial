@@ -53,7 +53,7 @@ navigator.serviceWorker.register('sw.js'.then(() => {
 })
 ```
 
-上面代码的`sw.js`就是需要浏览器注册的 service worker 脚本。注意，这个脚本必须与当前网址同域，service worker 不支持跨与脚本。另外，`sw.js`必须是从 HTTPS 协议加载的。
+上面代码的`sw.js`就是需要浏览器注册的 service worker 脚本。注意，这个脚本必须与当前网址同域，service worker 不支持跨域脚本。另外，`sw.js`必须是从 HTTPS 协议加载的。
 
 默认情况下，Service worker 只对根目录`/`生效，如果要改变生效范围，可以运行下面的代码。
 
