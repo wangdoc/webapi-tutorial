@@ -96,9 +96,9 @@ async function fetchText() {
 `Response.type`属性返回请求的类型。可能的值如下：
 
 - `basic`：普通请求，即同源请求。
-- `cors`：跨域请求。
+- `cors`：跨源请求。
 - `error`：网络错误，主要用于 Service Worker。
-- `opaque`：如果`fetch()`请求的`type`属性设为`no-cors`，就会返回这个值，详见请求部分。表示发出的是简单的跨域请求，类似`<form>`表单的那种跨域请求。
+- `opaque`：如果`fetch()`请求的`type`属性设为`no-cors`，就会返回这个值，详见请求部分。表示发出的是简单的跨源请求，类似`<form>`表单的那种跨源请求。
 - `opaqueredirect`：如果`fetch()`请求的`redirect`属性设为`manual`，就会返回这个值，详见请求部分。
 
 **Response.redirected**
@@ -455,19 +455,19 @@ const response = fetch(url, {
 
 `mode`属性指定请求的模式。可能的取值如下：
 
-- `cors`：默认值，允许跨域请求。
+- `cors`：默认值，允许跨源请求。
 - `same-origin`：只允许同源请求。
-- `no-cors`：请求方法只限于 GET、POST 和 HEAD，并且只能使用有限的几个简单标头，不能添加跨域的复杂标头，相当于提交表单、`<script>`加载脚本、`<img>`加载图片等传统的跨域请求方法。
+- `no-cors`：请求方法只限于 GET、POST 和 HEAD，并且只能使用有限的几个简单标头，不能添加跨源的复杂标头，相当于提交表单、`<script>`加载脚本、`<img>`加载图片等传统的跨源请求方法。
 
 **credentials**
 
 `credentials`属性指定是否发送 Cookie。可能的取值如下：
 
-- `same-origin`：默认值，同源请求时发送 Cookie，跨域请求时不发送。
-- `include`：不管同源请求，还是跨域请求，一律发送 Cookie。
+- `same-origin`：默认值，同源请求时发送 Cookie，跨源请求时不发送。
+- `include`：不管同源请求，还是跨源请求，一律发送 Cookie。
 - `omit`：一律不发送。
 
-跨域请求发送 Cookie，需要将`credentials`属性设为`include`。
+跨源请求发送 Cookie，需要将`credentials`属性设为`include`。
 
 ```javascript
 fetch('http://another.com', {
@@ -539,11 +539,11 @@ fetch('/page', {
 - `no-referrer-when-downgrade`：默认值，总是发送`Referer`标头，除非从 HTTPS 页面请求 HTTP 资源时不发送。
 - `no-referrer`：不发送`Referer`标头。
 - `origin`：`Referer`标头只包含域名，不包含完整的路径。
-- `origin-when-cross-origin`：同源请求`Referer`标头包含完整的路径，跨域请求只包含域名。
-- `same-origin`：跨域请求不发送`Referer`，同源请求发送。
+- `origin-when-cross-origin`：同源请求`Referer`标头包含完整的路径，跨源请求只包含域名。
+- `same-origin`：跨源请求不发送`Referer`，同源请求发送。
 - `strict-origin`：`Referer`标头只包含域名，HTTPS 页面请求 HTTP 资源时不发送`Referer`标头。
-- `strict-origin-when-cross-origin`：同源请求时`Referer`标头包含完整路径，跨域请求时只包含域名，HTTPS 页面请求 HTTP 资源时不发送该标头。
--  `unsafe-url`：不管什么情况，总是发送`Referer`标头。
+- `strict-origin-when-cross-origin`：同源请求时`Referer`标头包含完整路径，跨源请求时只包含域名，HTTPS 页面请求 HTTP 资源时不发送该标头。
+- `unsafe-url`：不管什么情况，总是发送`Referer`标头。
 
 ## 取消`fetch()`请求
 
@@ -597,4 +597,3 @@ try {
 - [Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
 - [Javascript Fetch API: The XMLHttpRequest evolution](https://developerhowto.com/2019/09/14/javascript-fetch-api/)
 - [A Guide to Faster Web App I/O and Data Operations with Streams](https://www.sitepen.com/blog/2017/10/02/a-guide-to-faster-web-app-io-and-data-operations-with-streams/)
-
