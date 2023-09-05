@@ -30,7 +30,7 @@ jobs:
           token: ${{ secrets.WANGDOC_BOT_TOKEN }}
           branch: master # The branch the action should deploy to.
           folder: dist # The folder the action should deploy.
-          target-folder: dist/typescript
+          target-folder: dist/webapi
           clean: true # Automatically remove deleted files from the deploy branch
-          commit-message: update from TypeScript tutorial
+          commit-message: update from WebAPI tutorial
 
