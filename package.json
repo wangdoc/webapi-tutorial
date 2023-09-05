@@ -12,11 +12,6 @@
     "chapter": "loppo chapter",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm update"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/wangdoc/webapi-tutorial.git"
@@ -29,11 +24,9 @@
   ],
   "author": "Ruan Yifeng",
   "license": "Creative Commons Attribution-ShareAlike License",
-  "devDependencies": {},
   "dependencies": {
-    "gh-pages": "^3.2.3",
-    "husky": "^4.3.8",
-    "loppo": "^0.6.24",
-    "loppo-theme-wangdoc": "^0.6.1"
+    "gh-pages": "^6.0.0",
+    "loppo": "^0.6.25",
+    "loppo-theme-wangdoc": "^0.6.6"
   }
 }
