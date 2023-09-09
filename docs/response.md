@@ -20,15 +20,15 @@ new Response(body, options)
 
 它带有两个参数，都是可选的。
 
-第一个参数`body`是一个对象，代表服务器返回的数据体，必须是下面类型之一：ArrayBuffer、ArrayBufferView、Blob、FormData、ReadableStream、String、URLSearchParams。
+第一个参数`body`代表服务器返回的数据体，必须是下面类型之一：ArrayBuffer、ArrayBufferView、Blob、FormData、ReadableStream、String、URLSearchParams。也就是说，它可以是对象或字符串。
 
 第二个参数`init`是一个对象，代表服务器返回的数据头，类型描述如下。
 
 ```javascript
 {
-  status :	Number
-  statusText :	String
-  headers :	Object
+  status: Number
+  statusText: String
+  headers: Object
 }
 ```
 
