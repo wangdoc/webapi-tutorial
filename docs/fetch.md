@@ -31,7 +31,7 @@ fetch('https://api.github.com/users/ruanyf')
   .catch(err => console.log('Request Failed', err)); 
 ```
 
-上面示例中，`fetch()`接收到的`response`是一个 [Stream 对象](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API)，`response.json()`是一个异步操作，用来取出所有内容，并将其转为 JSON 对象。
+上面示例中，`fetch()`接收到的`response`是一个 [Stream 对象](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API)，里面的数据本例是 JSON 数据，所以使用`response.json()`方法，将其转为 JSON 对象。它是一个异步操作，返回一个 Promise 对象。
 
 Promise 可以使用 await 语法改写，使得语义更清晰。
 

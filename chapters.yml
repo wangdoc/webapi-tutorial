@@ -7,6 +7,8 @@
 - intl-relativetimeformat.md: Intl.RelativeTimeFormat
 - page-lifecycle.md: Page Lifecycle API
 - page-visibility.md: Page Visibility API
+- request.md: Request API
+- response.md: Response API
 - server-sent-events.md: Server-Sent Events
 - svg.md: SVG 图像
 - websocket.md: WebSocket
