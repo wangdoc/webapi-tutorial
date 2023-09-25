@@ -20,7 +20,7 @@ new Response(body, options)
 
 它带有两个参数，都是可选的。
 
-第一个参数`body`代表服务器返回的数据体，必须是下面类型之一：ArrayBuffer、ArrayBufferView、Blob、FormData、ReadableStream、String、URLSearchParams。也就是说，它可以是对象或字符串。
+第一个参数`body`代表服务器返回的数据体，必须是下面类型之一：ArrayBuffer、ArrayBufferView、Blob、FormData、ReadableStream、String、URLSearchParams。
 
 第二个参数`init`是一个对象，代表服务器返回的数据头，类型描述如下。
 
@@ -39,6 +39,24 @@ const myBlob = new Blob();
 const myOptions = { status: 200, statusText: "OK" };
 const myResponse = new Response(myBlob, myOptions);
 ```
+
+注意，如果返回 JSON 数据，必须将其转成字符串返回。
+
+```javascript
+const data = {
+  hello: "world",
+};
+
+const json = JSON.stringify(data, null, 2);
+
+const result = new Response(json, {
+  headers: {
+    "content-type": "application/json;charset=UTF-8",
+  },
+});
+```
+
+上面示例中，构造一个返回 JSON 数据的 Response 对象，就必须用`JSON.stringify()`方法，将第一个参数转为字符串。
 
 ## 实例属性
 
