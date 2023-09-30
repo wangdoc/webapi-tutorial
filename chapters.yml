@@ -2,6 +2,7 @@
 - clipboard.md: Clipboard API
 - fetch.md: Fetch API
 - fontface.md: FontFace API
+- formdata.md: FormData 对象
 - geolocation.md: Geolocation API
 - headers.md: Headers 对象
 - intersectionObserver.md: IntersectionObserver
