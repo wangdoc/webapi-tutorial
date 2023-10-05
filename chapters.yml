@@ -7,6 +7,7 @@
 - headers.md: Headers 对象
 - intersectionObserver.md: IntersectionObserver
 - intl-relativetimeformat.md: Intl.RelativeTimeFormat
+- intl-segmenter.md: Intl.Segmenter API
 - page-lifecycle.md: Page Lifecycle API
 - page-visibility.md: Page Visibility API
 - request.md: Request API
