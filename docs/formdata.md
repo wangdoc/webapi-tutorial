@@ -227,9 +227,9 @@ FormData.set(name, blob, fileName);
 
 如果指定键名不存在，它会添加该键名，否则它会丢弃所有现有的键值，确保一个键名只有一个键值。这是它跟`append()`的主要区别。
 
-### value()
+### values()
 
-`value()`返回一个键值的迭代器，用于遍历所有键值。
+`values()`返回一个键值的迭代器，用于遍历所有键值。
 
 ```javascript
 FormData.values()
