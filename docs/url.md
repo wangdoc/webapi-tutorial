@@ -171,6 +171,52 @@ function handleFiles(files) {
 
 上面代码中，一旦图片加载成功以后，为本地文件生成的临时网址就没用了，于是可以在`img.onload`回调函数里面，通过`URL.revokeObjectURL()`方法释放资源。
 
+### URL.canParse()
+
+`URL.canParse()`用来检测一个字符串是否为有效 URL，它返回一个布尔值。
+
+```javascipt
+URL.canParse(url)
+URL.canParse(url, base)
+```
+
+`URL.canParse()`可以接受两个参数。
+
+- `url`：字符串或者对象（比如`<a>`元素的 DOM 对象），表示 URL。
+- `base`：字符串或者 URL 实例对象，表示 URL 的基准位置。它是可选参数，当第一个参数`url`为相对 URL 时，会使用这个参数，计算出完整的 URL，再进行判断。
+
+```javascript
+URL.canParse("https://developer.mozilla.org/") // true
+URL.canParse("/en-US/docs") // false
+URL.canParse("/en-US/docs", "https://developer.mozilla.org/") // true
+```
+
+上面示例中，如果第一个参数是相对 URL，这时必须要有第二个参数，否则返回`false`。
+
+下面的示例是第二个参数为 URL 实例对象。
+
+```javascript
+let baseUrl = new URL("https://developer.mozilla.org/");
+let url = "/en-US/docs";
+
+URL.canParse(url, baseUrl) // true
+```
+
+该方法内部使用`URL()`构造方法相同的解析算法，因此可以用`URL()`构造方法代替。
+
+```javascript
+function isUrlValid(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+```
+
+上面示例中，给出了`URL.canParse()`的替代实现`isUrlValid()`。
+
 ## 实例方法
 
 ### toString()
