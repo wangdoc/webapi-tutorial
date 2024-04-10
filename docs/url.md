@@ -18,10 +18,10 @@ let url = new URL('https://example.com');
 
 ```javascript
 const url1 = new URL('page2.html', 'http://example.com/page1.html');
-url2.href // "http://example.com/page2.html"
+url1.href // "http://example.com/page2.html"
 
 const url2 = new URL('..', 'http://example.com/a/b.html')
-url3.href // "http://example.com/"
+url2.href // "http://example.com/"
 ```
 
 这种写法很方便基于现有网址，构造新的 URL。
