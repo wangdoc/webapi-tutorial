@@ -63,7 +63,7 @@ fetch('https://example.com/api', {
 
 ```javascript
 const params1 = new URLSearchParams('?a=1&b=2');
-const params2 = new URLSearchParams(params);
+const params2 = new URLSearchParams(params1);
 ```
 
 上面示例中，`params1`和`params2`是两个一模一样的实例对象，但是修改其中一个，不会影响到另一个。
