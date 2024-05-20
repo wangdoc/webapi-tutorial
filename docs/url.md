@@ -173,7 +173,7 @@ function handleFiles(files) {
 
 ### URL.canParse()
 
-`URL.canParse()`用来检测一个字符串是否为有效 URL，它返回一个布尔值。
+`URL()`构造函数解析非法网址时，会抛出错误，必须用`try...catch`代码块处理，这样终究不是非常方便。因此，URL 对象又引入了`URL.canParse()`方法，它返回一个布尔值，表示当前字符串是否为有效网址。
 
 ```javascipt
 URL.canParse(url)
@@ -216,6 +216,20 @@ function isUrlValid(string) {
 ```
 
 上面示例中，给出了`URL.canParse()`的替代实现`isUrlValid()`。
+
+### URL.parse()
+
+`URL.parse()`是一个新添加的方法，Chromium 126 和 Firefox 126 开始支持。
+
+它的主要目的就是，改变`URL()`构造函数解析非法网址抛错的问题。这个新方法不会抛错，如果参数是有效网址，则返回 URL 实例对象，否则返回`null`。
+
+```javascript
+const urlstring = "this is not a URL";
+
+const not_a_url = URL.parse(urlstring); // null
+```
+
+上面示例中，`URL.parse()`的参数不是有效网址，所以返回`null`。
 
 ## 实例方法
 
