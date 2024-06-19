@@ -15,6 +15,7 @@
 - server-sent-events.md: Server-Sent Events
 - svg.md: SVG 图像
 - url.md: URL 对象
+- urlpattern.md: URL Pattern API
 - urlsearchparams.md: URLSearchParams 对象
 - websocket.md: WebSocket
 - web-share-api.md: Web Share API
