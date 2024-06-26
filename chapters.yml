@@ -19,3 +19,4 @@
 - urlsearchparams.md: URLSearchParams 对象
 - websocket.md: WebSocket
 - web-share-api.md: Web Share API
+- postmessage.md: window.postMessage() 方法
