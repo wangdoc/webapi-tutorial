@@ -6,7 +6,7 @@ Headers 代表 HTTP 消息的数据头。
 
 它通过`Headers()`构造方法，生成实例对象。`Request.headers`属性和`Response.headers`属性，指向的都是 Headers 实例对象。
 
-Headers 实例对象内部，以键值对的形式保存 HTTP 消息头，可以用`for...of`循环进行便利，比如`for (const p of myHeaders)`。新建的 Headers 实例对象，内部是空的，需要用`append()`方法添加键值对。
+Headers 实例对象内部，以键值对的形式保存 HTTP 消息头，可以用`for...of`循环进行遍历，比如`for (const p of myHeaders)`。新建的 Headers 实例对象，内部是空的，需要用`append()`方法添加键值对。
 
 ## 构造函数
 
