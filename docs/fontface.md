@@ -31,7 +31,7 @@ fontFace.family // "Roboto"
 - `FontFace.display`：字符串，指定字体加载期间如何展示，等同于 CSS 的`font-display`属性。它有五个可能的值：`auto`（由浏览器决定）、`block`（字体加载期间，前3秒会显示不出内容，然后只要还没完成加载，就一直显示后备字体）、`fallback`（前100毫秒显示不出内容，后3秒显示后备字体，然后只要字体还没完成加载，就一直显示后备字体）、`optional`（前100毫秒显示不出内容，然后只要字体还没有完成加载，就一直显示后备字体），`swap`（只要字体没有完成加载，就一直显示后备字体）。
 - `FontFace.style`：字符串，等同于 CSS 的`font-style`属性。
 - `FontFace.weight`：字符串，等同于 CSS 的`font-weight`属性。
-- `FontFace.stretch`：字符串，等同于 CSS 的`font-strentch`属性。
+- `FontFace.stretch`：字符串，等同于 CSS 的`font-stretch`属性。
 - `FontFace.unicodeRange`：字符串，等同于`descriptors`对象的同名属性。
 - `FontFace.variant`：字符串，等同于`descriptors`对象的同名属性。
 - `FontFace.featureSettings`：字符串，等同于`descriptors`对象的同名属性。
