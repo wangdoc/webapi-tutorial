@@ -194,7 +194,7 @@ FormData.has(name)
 
 ### keys()
 
-`key()`返回一个键名的迭代器，用于遍历所有键名。
+`keys()`返回一个键名的迭代器，用于遍历所有键名。
 
 ```javascript
 FormData.keys()
